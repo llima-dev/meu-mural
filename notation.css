@@ -1,0 +1,563 @@
+.card-borda-azul {
+  border-left: 6px solid #01204E;
+  background-color: #e8f0fe;
+}
+
+.card-borda-verde {
+  border-left: 6px solid #028391;
+  background-color: #e6f4ea;
+}
+
+.card-borda-vermelha {
+  border-left: 6px solid #dc2626;
+  background-color: #fdecea;
+}
+
+.card-borda-amarela {
+  border-left: 6px solid #facc15;
+  background-color: #fff8dbbe;
+}
+
+.no-border {
+    border: none;
+}
+
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.card {
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.37); /* sombra sutil */
+  border-radius: 6px;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 9px 12px #313131;
+}
+
+/* Enquanto está sendo arrastado */
+.sortable-chosen {
+  background-size: 10px 10px;
+}
+
+/* Espaço "fantasma" deixado no lugar do card original */
+.sortable-ghost {
+  background-color: #f0f0f0;
+  border: 2px dashed #ccc;
+  box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+  opacity: 0.5;
+  transform: scale(0.98);
+}
+
+#hashtag-sugestoes {
+  position: absolute;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 4px 12px #313131;
+  max-height: 180px;
+  overflow-y: auto;
+  padding: 4px 0;
+  font-size: 0.9rem;
+  z-index: 9999;
+}
+
+#hashtag-sugestoes .list-group-item {
+  padding: 6px 12px;
+  border: none;
+  background-color: transparent;
+  color: #333;
+  transition: background-color 0.2s ease;
+}
+
+#hashtag-sugestoes .list-group-item:hover {
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+.coluna-scroll {
+  max-height: 80vh; /* ou calc(100vh - header, se tiver) */
+  overflow-y: auto;
+  padding-right: 8px; /* pra não cortar a sombra do card */
+}
+
+.coluna-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.coluna-scroll::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.container-fluid {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.mural-row {
+  flex: 1;
+  display: flex;
+  gap: 12px;
+  overflow: hidden;
+}
+
+.mural-col-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.coluna {
+  flex: 1;
+  overflow-y: auto;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.568) !important;
+}
+
+.coluna h4 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+pre code {
+  padding: 1rem;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  display: block;
+  overflow-x: auto;
+}
+
+#coluna-snippets .card {
+  cursor: pointer;
+}
+
+.card.anotacao-card {
+  font-size: 0.92rem;
+  padding: 12px;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  border-left: 5px solid #343a40;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.596);
+}
+
+.card.anotacao-card .card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.card.anotacao-card .card-text {
+  font-size: 0.92rem;
+}
+
+.card.anotacao-card .btn-sm {
+  padding: 3px 7px;
+  font-size: 0.8rem;
+}
+
+.ql-container {
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.card.snippet-card {
+  font-size: 0.92rem;
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
+  border-left: 5px solid #0d6efd;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.596);
+}
+
+.card.snippet-card .card-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.card.snippet-card pre {
+  background-color: #2d2d2d;
+  border-radius: 6px;
+  padding: 10px;
+  color: #f8f8f2;
+  font-size: 0.85rem;
+  overflow-x: auto;
+  margin-bottom: 0.75rem;
+}
+
+.card.snippet-card .btn-sm {
+  padding: 3px 7px;
+  font-size: 0.8rem;
+}
+
+.btn-icon {
+  padding: 2px 6px;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+.check {
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 8px 10px;
+  background-color: #fdfdfd;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.check .form-check {
+  background: #ffffff;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+.check :hover {
+    font-weight: 300;
+    cursor: pointer;
+}
+
+.hashtag {
+  color: #0c326d;
+  font-weight: 500;
+  background-color: #e7f1ff;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-right: 4px;
+  display: inline-block;
+}
+
+.ql-font span[data-label="Sans Serif"]::before { content: "Sans Serif"; }
+.ql-font span[data-label="Serif"]::before { content: "Serif"; }
+
+.hashtag {
+  display: inline-block;
+  padding: 3px 8px;
+  background: #e7f1ff;
+  border-radius: 0 6px 6px 0;
+  font-weight: 500;
+  font-size: 0.85rem;
+  margin-right: 6px;
+}
+
+.card:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: 0 12px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card-alarme {
+  animation: pulse 2s infinite;
+  border-left: 6px solid #ecb665;
+  background-color: #fff3f3;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0px rgba(220, 128, 53, 0.699); }
+  50% { box-shadow: 0 0 12px rgba(240, 93, 56, 0.8); }
+}
+
+.card-title {
+  font-family: 'Segoe UI Semibold', 'Roboto', sans-serif;
+  font-size: 1.1rem;
+  color: #212529;
+  border-bottom: 1px dashed #ccc;
+  padding-bottom: 4px;
+  margin-bottom: 10px;
+}
+
+.checklist-container .check {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  background: #f9f9fb;
+  border-left: 4px solid #777777;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.212);
+  transition: background 0.3s ease;
+}
+
+.checklist-container .check:hover {
+  background: #eef4ff;
+}
+
+.checklist-container input.form-check-input {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  position: relative;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.checklist-container input.form-check-input:checked {
+  border-color: #198754;
+  background-color: #198754;
+}
+
+.checklist-container input.form-check-input:checked::after {
+  color: white;
+  position: absolute;
+  left: 4px;
+  top: 0px;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.checklist-container .form-check-label {
+  flex-grow: 1;
+  font-size: 0.95rem;
+  padding: 2px 4px;
+  color: #333;
+  transition: color 0.2s ease;
+}
+
+.checklist-container .form-check-input:checked + .form-check-label {
+  color: #888;
+  text-decoration: line-through;
+}
+
+.checklist-container .btn-icon {
+  opacity: 0.5;
+  transition: opacity 0.2s ease;
+  margin-left: 6px;
+}
+
+.checklist-container .check:hover .btn-icon {
+  opacity: 1;
+}
+
+.coluna-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.coluna-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.coluna-scroll::-webkit-scrollbar-thumb {
+  background-color: #313131;
+  border-radius: 6px;
+  transition: background-color 0.3s ease;
+}
+
+.coluna-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: #313131;
+}
+
+.coluna h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  border-left: 5px solid #313131;
+  padding-left: 10px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #313131;
+}
+.coluna h4 i {
+  font-size: 1rem;
+  color: #313131;
+}
+.bolinha-cor {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+.cor-opcao {
+  position: relative;
+  cursor: pointer;
+}
+
+.cor-opcao input {
+  display: none;
+}
+
+.bolinha {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: inline-block;
+  border: 2px solid transparent;
+  transition: transform 0.2s ease;
+}
+
+.cor-opcao input:checked + .bolinha {
+  border: 2px solid #333;
+  transform: scale(1.15);
+}
+
+.btn-icon {
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
+.card-text a {
+  display: block;
+  color: #0d6efd;
+  text-decoration: none;
+  margin-bottom: 4px;
+  word-break: break-all;
+}
+
+.card-text a:hover {
+  text-decoration: underline;
+  color: #084298;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.filtro-busca {
+  padding: 0.45rem 0.75rem;
+  border-radius: 20px;
+  border: 1px solid #5154553a;
+  background-color: #f8f9fa;
+  font-size: 0.875rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.filtro-busca:focus {
+  border-color: #0d6efd;
+  box-shadow: 0 0 0 0.15rem rgba(13, 110, 253, 0.25);
+  background-color: #fff;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+}
+
+.container-fluid {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.row.gx-3 {
+  flex: 1;
+  overflow: hidden;
+}
+
+.mural-col-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.coluna {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 8px;
+  border-radius: 8px;
+}
+.coluna::-webkit-scrollbar {
+  width: 6px;
+}
+
+.coluna::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+}
+
+.coluna {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden; /* impõe o scroll só na parte interna */
+}
+
+.sortable-area {
+  overflow-y: auto;
+  flex: 1; /* pega o espaço restante da coluna */
+  padding-right: 8px;
+}
+
+.charlonico-highlight {
+  background-color: #facc15;
+  color: #111;
+  font-weight: bold;
+  padding: 0 2px;
+  border-radius: 3px;
+}
+
+.hashtag-sugestoes {
+  position: absolute;
+  background: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  z-index: 9999;
+  max-height: 200px;
+  overflow-y: auto;
+  width: 100%;
+  padding: 4px 0;
+}
+
+.hashtag-sugestoes .list-group-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 0;
+  font-size: 0.95rem;
+  transition: background 0.2s;
+  cursor: pointer;
+}
+
+.hashtag-sugestoes .list-group-item:hover {
+  background-color: #b8b8b8a8;
+}
+
+.hashtag-sugestoes .list-group-item i {
+  font-size: 1rem;
+}
+
+#linguagemSnippet:hover {
+    cursor: pointer;
+}
+
+.tags .badge {
+  font-size: 0.75rem;
+  background: #f1f1f1;
+  color: #555;
+  border-radius: 4px;
+}
+
+.card .btn-icon {
+  background: transparent;
+  border: none;
+  color: #666;
+  transition: color 0.2s ease;
+}
