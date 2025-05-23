@@ -70,7 +70,7 @@ Funciona 100% no navegador, sem necessidade de login, servidor ou internet. Idea
 
 ## 🖼️ Captura de tela
 
-> _(adicione aqui uma imagem do mural em uso!)_
+![alt text](image.png)
 
 ---
 
