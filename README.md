@@ -27,7 +27,7 @@ Funciona 100% no navegador, sem necessidade de login, servidor ou internet. Idea
 ## 🚀 Como usar
 
 1. Acesse:  
-   👉 [https://lsantos-art.github.io/mkd-template/](https://lsantos-art.github.io/mkd-template/)
+   👉 [https://llima-dev.github.io/notation-pro/notation.html](https://llima-dev.github.io/notation-pro/notation.html)
 
 2. Use os botões no topo de cada coluna para adicionar novos registros:
    - **Lembrete**
