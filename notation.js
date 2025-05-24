@@ -83,12 +83,12 @@ let anotacoes = JSON.parse(localStorage.getItem('anotacoes')) || [];
           </div>
 
         <div class="d-flex justify-content-end mt-2 gap-2">
-            <button class="btn btn-sm no-border btn-outline-secondary" onclick="arquivarLembrete('${item.id}')"><i class="fas fa-box-archive"></i></button>
-            <button class="btn btn-sm no-border btn-outline-secondary" onclick="editarLembrete('${item.id}')"><i class="fas fa-pen"></i></button>
-            <button class="btn btn-sm no-border btn-outline-secondary" onclick="adicionarChecklist('${item.id}')"><i class="fas fa-list-check"></i></button>
-            <button class="btn btn-sm no-border btn-outline-secondary" onclick="definirAlarme('${item.id}')"><i class="fas fa-bell"></i></button>
-            <button class="btn btn-sm no-border btn-outline-secondary" onclick="removerLembrete('${item.id}')"><i class="fas fa-trash"></i></button>
-            <button class="btn btn-sm no-border btn-outline-secondary" onclick="abrirModalInformacoes('${item.id}')">
+            <button class="btn btn-sm no-border btn-outline-secondary" title="Arquivar" onclick="arquivarLembrete('${item.id}')"><i class="fas fa-box-archive"></i></button>
+            <button class="btn btn-sm no-border btn-outline-secondary" title="Editar" onclick="editarLembrete('${item.id}')"><i class="fas fa-pen"></i></button>
+            <button class="btn btn-sm no-border btn-outline-secondary" title="Adicionar check-list" onclick="adicionarChecklist('${item.id}')"><i class="fas fa-list-check"></i></button>
+            <button class="btn btn-sm no-border btn-outline-secondary" title="Definir alarme" onclick="definirAlarme('${item.id}')"><i class="fas fa-bell"></i></button>
+            <button class="btn btn-sm no-border btn-outline-secondary" title="Remover" onclick="removerLembrete('${item.id}')"><i class="fas fa-trash"></i></button>
+            <button class="btn btn-sm no-border btn-outline-secondary info-btn" title="Informações" onclick="abrirModalInformacoes('${item.id}')">
               <i class="fas fa-circle-info"></i>
             </button>
         </div>
@@ -455,13 +455,13 @@ function renderizarSnippets() {
         <p class="card-text">${snippet.descricao || ''}</p>
         <pre><code class="language-${snippet.linguagem}">${snippet.codigo}</code></pre>
         <div class="d-flex justify-content-end gap-2">
-        <button class="btn btn-sm no-border btn-outline-secondary" onclick="editarSnippet('${snippet.id}')">
+        <button class="btn btn-sm no-border btn-outline-secondary" title="Editar" onclick="editarSnippet('${snippet.id}')">
             <i class="fas fa-pen"></i>
         </button>
-        <button class="btn btn-sm no-border btn-outline-secondary" onclick="removerSnippet('${snippet.id}')">
+        <button class="btn btn-sm no-border btn-outline-secondary" title="Remover" onclick="removerSnippet('${snippet.id}')">
             <i class="fas fa-trash"></i>
         </button>
-        <button class="btn btn-sm no-border btn-outline-secondary" onclick="copiarCodigo('${snippet.id}')">
+        <button class="btn btn-sm no-border btn-outline-secondary" title="Copiar código" onclick="copiarCodigo('${snippet.id}')">
             <i class="fas fa-copy"></i>
         </button>
         </div>
@@ -609,6 +609,7 @@ document.addEventListener('DOMContentLoaded', () => {
         [{ header: [1, 2, 3, false] }],
         [{ font: [] }],
         ['bold', 'italic', 'underline', 'strike'],
+        [{ color: ['#000000', '#e60000', '#ff9900', '#ffff00', '#008a00', '#0066cc', '#9933ff'] }],
         [{ list: 'ordered' }, { list: 'bullet' }],
         [{ align: [] }],
         ['link'],
@@ -659,28 +660,35 @@ function renderizarAnotacoes() {
     card.dataset.id = anot.id;
 
     card.innerHTML = `
-        <div class="card-body position-relative">
-            <div class="position-absolute top-0 end-0 m-2 drag-handle text-muted" style="cursor: grab;" title="Arrastar para mover">
-            <i class="fas fa-up-down-left-right"></i>
-            </div>
-
-            <h5 class="card-title">${anot.titulo || 'Sem título'}</h5>
-            <div class="card-text">${anot.conteudoHtml}</div>
-            <p class="text-muted small mt-2">${formatarData(anot.criadoEm)}</p>
-
-            <div class="d-flex justify-content-end gap-2">
-            <button class="btn btn-sm no-border btn-outline-secondary" onclick="arquivarAnotacao('${anot.id}')">
-                <i class="fas fa-box-archive"></i>
-            </button>
-            <button class="btn btn-sm no-border btn-outline-secondary" onclick="editarAnotacao('${anot.id}')">
-                <i class="fas fa-pen"></i>
-            </button>
-            <button class="btn btn-sm no-border btn-outline-secondary" onclick="removerAnotacao('${anot.id}')">
-                <i class="fas fa-trash"></i>
-            </button>
-            </div>
-        </div>
-    `;
+    <div class="card-body position-relative d-flex flex-column">
+      <div class="position-absolute top-0 end-0 m-2 drag-handle text-muted" style="cursor: grab;" title="Arrastar para mover">
+        <i class="fas fa-up-down-left-right"></i>
+      </div>
+  
+      <h5 class="card-title">${anot.titulo || 'Sem título'}</h5>
+  
+      <div class="card-text flex-grow-1">
+        <div class="anotacao-conteudo-scroll">${anot.conteudoHtml}</div>
+      </div>
+  
+      <p class="text-muted small mt-2 mb-1">${formatarData(anot.criadoEm)}</p>
+  
+      <div class="d-flex justify-content-end gap-2">
+        <button class="btn btn-sm no-border btn-outline-secondary" title="Arquivar" onclick="arquivarAnotacao('${anot.id}')">
+          <i class="fas fa-box-archive"></i>
+        </button>
+        <button class="btn btn-sm no-border btn-outline-secondary" title="Editar" onclick="editarAnotacao('${anot.id}')">
+          <i class="fas fa-pen"></i>
+        </button>
+        <button class="btn btn-sm no-border btn-outline-secondary" title="Remover" onclick="removerAnotacao('${anot.id}')">
+          <i class="fas fa-trash"></i>
+        </button>
+        <button class="btn btn-sm no-border btn-outline-secondary info-btn" title="Ver anotação completa" onclick="abrirAnotacaoCompleta('${anot.id}')">
+          <i class="fas fa-circle-info"></i>
+        </button>
+      </div>
+    </div>
+  `;  
 
     container.appendChild(card);
   });
@@ -736,6 +744,7 @@ function editarAnotacao(id) {
         [{ header: [1, 2, 3, false] }],
         [{ font: [] }],
         ['bold', 'italic', 'underline', 'strike'],
+        [{ color: ['#000000', '#e60000', '#ff9900', '#ffff00', '#008a00', '#0066cc', '#9933ff'] }],
         [{ list: 'ordered' }, { list: 'bullet' }],
         [{ align: [] }],
         ['link'],
@@ -816,6 +825,7 @@ function importarJSON(input) {
         renderizarAnotacoes();
 
         Swal.fire('Importado!', 'Os dados foram restaurados com sucesso.', 'success');
+        atualizarContagens();
       } else {
         throw new Error('Formato inválido');
       }
@@ -824,7 +834,7 @@ function importarJSON(input) {
       Swal.fire('Erro!', 'Arquivo inválido ou corrompido.', 'error');
     }
 
-    input.value = ''; // reseta o input
+    input.value = '';
   });
 
   novoReader.readAsText(file);
@@ -1013,6 +1023,9 @@ function desarquivar(tipo, id) {
     renderizarLembretes?.();
     renderizarSnippets?.();
     renderizarAnotacoes?.();
+
+    const modal = bootstrap.Modal.getInstance(document.getElementById('modalArquivados'));
+    if (modal) modal.hide();
 
     abrirModalArquivados(tipo);
     atualizarContagens();
@@ -1455,3 +1468,15 @@ document.getElementById('btnEnviarComentario').addEventListener('click', () => {
   input.value = '';
   atualizarComentariosModal();
 });
+
+function abrirAnotacaoCompleta(id) {
+  const anot = anotacoes.find(a => a.id === id);
+  if (!anot) return;
+
+  document.getElementById('tituloAnotacaoInfo').textContent = anot.titulo || 'Sem título';
+  document.getElementById('conteudoAnotacaoInfo').innerHTML = anot.conteudoHtml || '<em>Sem conteúdo</em>';
+  document.getElementById('dataAnotacaoInfo').textContent = formatarData(anot.criadoEm);
+
+  const modal = new bootstrap.Modal(document.getElementById('modalAnotacaoInfo'));
+  modal.show();
+}
