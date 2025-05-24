@@ -628,3 +628,23 @@ body {
   background-color: #367DB5 !important;
   font-weight: 400;
 }
+
+#comentariosConteudo {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+/* Estilo do scrollbar (compatível com WebKit) */
+#comentariosConteudo::-webkit-scrollbar {
+  width: 6px;
+}
+
+#comentariosConteudo::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.719);
+  border-radius: 3px;
+}
+
+#comentariosConteudo::-webkit-scrollbar-track {
+  background-color: transparent;
+}
