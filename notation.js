@@ -46,8 +46,6 @@ let anotacoes = JSON.parse(localStorage.getItem('anotacoes')) || [];
       <div class="card-body">
         <div class="d-flex gap-2 mb-2">
         ${(item.tags || []).map(tag => {
-            console.log(tag);
-            
             const icone = topicosHashtags[tag]?.icon || 'fas fa-tag';
             const cor = topicosHashtags[tag]?.cor || '#6c757d';
             return `<i class="${icone}" style="color:${cor}; font-size: 1rem;" title="#${tag}"></i>`;
@@ -78,18 +76,21 @@ let anotacoes = JSON.parse(localStorage.getItem('anotacoes')) || [];
             <div class="d-flex align-items-start gap-2 mb-1 check rounded">
                 <input class="form-check-input mt-1" type="checkbox" id="check-${index}-${i}" ${chk.feito ? 'checked' : ''}>
                 <label class="form-check-label flex-grow-1 p-1" for="check-${index}-${i}">${chk.texto}</label>
-                <button class="btn btn-sm btn-outline-secondary btn-icon" onclick="editarChecklistItem('${item.id}', ${i})" title="Editar"><i class="fas fa-pen"></i></button>
-                <button class="btn btn-sm btn-outline-secondary btn-icon" onclick="removerChecklistItem('${item.id}', ${i})" title="Remover"><i class="fas fa-trash"></i></button>
+                <button class="btn btn-sm no-border btn-outline-secondary" onclick="editarChecklistItem('${item.id}', ${i})" title="Editar"><i class="fas fa-pen"></i></button>
+                <button class="btn btn-sm no-border btn-outline-secondary" onclick="removerChecklistItem('${item.id}', ${i})" title="Remover"><i class="fas fa-trash"></i></button>
             </div>
             `).join('') || ''}
           </div>
 
         <div class="d-flex justify-content-end mt-2 gap-2">
-            <button class="btn btn-sm btn-outline-dark no-border" onclick="arquivarLembrete('${item.id}')"><i class="fas fa-box-archive"></i></button>
+            <button class="btn btn-sm no-border btn-outline-secondary" onclick="arquivarLembrete('${item.id}')"><i class="fas fa-box-archive"></i></button>
             <button class="btn btn-sm no-border btn-outline-secondary" onclick="editarLembrete('${item.id}')"><i class="fas fa-pen"></i></button>
             <button class="btn btn-sm no-border btn-outline-secondary" onclick="adicionarChecklist('${item.id}')"><i class="fas fa-list-check"></i></button>
             <button class="btn btn-sm no-border btn-outline-secondary" onclick="definirAlarme('${item.id}')"><i class="fas fa-bell"></i></button>
             <button class="btn btn-sm no-border btn-outline-secondary" onclick="removerLembrete('${item.id}')"><i class="fas fa-trash"></i></button>
+            <button class="btn btn-sm no-border btn-outline-secondary" onclick="abrirModalInformacoes('${item.id}')">
+              <i class="fas fa-circle-info"></i>
+            </button>
         </div>
         </div>
       `;
@@ -454,13 +455,13 @@ function renderizarSnippets() {
         <p class="card-text">${snippet.descricao || ''}</p>
         <pre><code class="language-${snippet.linguagem}">${snippet.codigo}</code></pre>
         <div class="d-flex justify-content-end gap-2">
-        <button class="btn btn-sm btn-outline-secondary" onclick="editarSnippet('${snippet.id}')">
+        <button class="btn btn-sm no-border btn-outline-secondary" onclick="editarSnippet('${snippet.id}')">
             <i class="fas fa-pen"></i>
         </button>
-        <button class="btn btn-sm btn-outline-secondary" onclick="removerSnippet('${snippet.id}')">
+        <button class="btn btn-sm no-border btn-outline-secondary" onclick="removerSnippet('${snippet.id}')">
             <i class="fas fa-trash"></i>
         </button>
-        <button class="btn btn-sm btn-outline-secondary" onclick="copiarCodigo('${snippet.id}')">
+        <button class="btn btn-sm no-border btn-outline-secondary" onclick="copiarCodigo('${snippet.id}')">
             <i class="fas fa-copy"></i>
         </button>
         </div>
@@ -610,7 +611,7 @@ document.addEventListener('DOMContentLoaded', () => {
         ['bold', 'italic', 'underline', 'strike'],
         [{ list: 'ordered' }, { list: 'bullet' }],
         [{ align: [] }],
-        ['link', 'image'],
+        ['link'],
         ['clean']
       ]
     }
@@ -668,13 +669,13 @@ function renderizarAnotacoes() {
             <p class="text-muted small mt-2">${formatarData(anot.criadoEm)}</p>
 
             <div class="d-flex justify-content-end gap-2">
-            <button class="btn btn-sm btn-outline-secondary" onclick="arquivarAnotacao('${anot.id}')">
+            <button class="btn btn-sm no-border btn-outline-secondary" onclick="arquivarAnotacao('${anot.id}')">
                 <i class="fas fa-box-archive"></i>
             </button>
-            <button class="btn btn-sm btn-outline-secondary" onclick="editarAnotacao('${anot.id}')">
+            <button class="btn btn-sm no-border btn-outline-secondary" onclick="editarAnotacao('${anot.id}')">
                 <i class="fas fa-pen"></i>
             </button>
-            <button class="btn btn-sm btn-outline-secondary" onclick="removerAnotacao('${anot.id}')">
+            <button class="btn btn-sm no-border btn-outline-secondary" onclick="removerAnotacao('${anot.id}')">
                 <i class="fas fa-trash"></i>
             </button>
             </div>
@@ -737,7 +738,7 @@ function editarAnotacao(id) {
         ['bold', 'italic', 'underline', 'strike'],
         [{ list: 'ordered' }, { list: 'bullet' }],
         [{ align: [] }],
-        ['link', 'image'],
+        ['link'],
         ['clean']
       ]
     }
@@ -746,10 +747,10 @@ function editarAnotacao(id) {
 
   // Botões de ação
   botoes.innerHTML = `
-    <button class="btn btn-sm btn-outline-secondary" onclick="salvarEdicaoAnotacao('${id}')">
+    <button class="btn btn-sm no-border btn-outline-secondary" onclick="salvarEdicaoAnotacao('${id}')">
       <i class="fas fa-check"></i>
     </button>
-    <button class="btn btn-sm btn-outline-secondary" onclick="renderizarAnotacoes()">
+    <button class="btn btn-sm no-border btn-outline-secondary" onclick="renderizarAnotacoes()">
       <i class="fas fa-times"></i>
     </button>
   `;
@@ -882,6 +883,7 @@ function arquivarLembrete(id) {
     lembrete.arquivado = true;
     salvarLembretes();
     renderizarLembretes();
+    atualizarContagens();
   }
 }
 
@@ -915,10 +917,10 @@ function abrirModalArquivados(tipo) {
             <label for="selecionarTodosArquivados">Selecionar todos</label>
           </div>
           <div class="d-flex gap-2">
-            <button id="btnRestaurarSelecionados" class="btn btn-sm btn-outline-secondary btn-icon" onclick="restaurarSelecionadosArquivados()" title="Restaurar selecionados" disabled>
+            <button id="btnRestaurarSelecionados" class="btn btn-sm no-border btn-outline-secondary" onclick="restaurarSelecionadosArquivados()" title="Restaurar selecionados" disabled>
             <i class="fas fa-undo"></i>
             </button>
-            <button id="btnExcluirSelecionados" class="btn btn-sm btn-outline-secondary btn-icon" onclick="excluirSelecionadosArquivados()" title="Excluir selecionados" disabled>
+            <button id="btnExcluirSelecionados" class="btn btn-sm no-border btn-outline-secondary" onclick="excluirSelecionadosArquivados()" title="Excluir selecionados" disabled>
             <i class="fas fa-trash"></i>
             </button>
           </div>
@@ -934,10 +936,10 @@ function abrirModalArquivados(tipo) {
             <label for="selecionarTodosArquivados">Selecionar todos</label>
         </div>
         <div class="d-flex gap-2">
-            <button id="btnRestaurarSelecionados" class="btn btn-sm btn-outline-secondary btn-icon" onclick="restaurarSelecionadosArquivados('anotacoes')" title="Restaurar selecionados" disabled>
+            <button id="btnRestaurarSelecionados" class="btn btn-sm no-border btn-outline-secondary" onclick="restaurarSelecionadosArquivados('anotacoes')" title="Restaurar selecionados" disabled>
             <i class="fas fa-undo"></i>
             </button>
-            <button id="btnExcluirSelecionados" class="btn btn-sm btn-outline-secondary btn-icon" onclick="excluirSelecionadosArquivados('anotacoes')" title="Excluir selecionados" disabled>
+            <button id="btnExcluirSelecionados" class="btn btn-sm no-border btn-outline-secondary" onclick="excluirSelecionadosArquivados('anotacoes')" title="Excluir selecionados" disabled>
             <i class="fas fa-trash"></i>
             </button>
         </div>
@@ -967,7 +969,7 @@ function abrirModalArquivados(tipo) {
             <div class="text-muted small">${descricao}</div>
             </div>
         </div>
-        <button class="btn btn-sm btn-outline-secondary btn-icon" onclick="desarquivar('${tipo}', '${item.id}')" title="Restaurar">
+        <button class="btn btn-sm no-border btn-outline-secondary" onclick="desarquivar('${tipo}', '${item.id}')" title="Restaurar">
             <i class="fas fa-undo"></i>
         </button>
         </div>
@@ -986,7 +988,10 @@ function desarquivarLembrete(id) {
     lembrete.arquivado = false;
     salvarLembretes();
     renderizarLembretes();
-    abrirModalArquivados(); // atualiza a lista
+    const modal = bootstrap.Modal.getInstance(document.getElementById('modalArquivados'));
+    if (modal) modal.hide();
+
+    setTimeout(() => abrirModalArquivados(tipo), 300); 
   }
 }
 
@@ -1010,6 +1015,7 @@ function desarquivar(tipo, id) {
     renderizarAnotacoes?.();
 
     abrirModalArquivados(tipo);
+    atualizarContagens();
   }
 }
 
@@ -1019,6 +1025,7 @@ function arquivarAnotacao(id) {
     anot.arquivado = true;
     salvarAnotacoes();
     renderizarAnotacoes();
+    atualizarContagens();
   }
 }
 
@@ -1080,6 +1087,7 @@ function restaurarSelecionadosArquivados(tipo = 'lembretes') {
   if (modal) modal.hide();
 
   setTimeout(() => abrirModalArquivados(tipo), 300);
+  atualizarContagens();
 }
 
 function excluirSelecionadosArquivados(tipo = 'lembretes') {
@@ -1097,6 +1105,7 @@ function excluirSelecionadosArquivados(tipo = 'lembretes') {
   if (modal) modal.hide();
 
   setTimeout(() => abrirModalArquivados(tipo), 300);
+  atualizarContagens();
 }
 
 function confirmarLimpezaStorage() {
@@ -1281,3 +1290,168 @@ function atualizarContagens() {
 
   if (elSnippets) elSnippets.textContent = `(${snippets.filter(s => !s.arquivado).length})`;
 }
+
+function mostrarComentarios(id) {
+  const lembrete = lembretes.find(l => l.id === id);
+  if (!lembrete) return;
+
+  if (!lembrete.comentarios) lembrete.comentarios = [];
+
+  const html = `
+    <div style="max-height: 250px; overflow-y: auto; text-align: left;">
+      ${lembrete.comentarios.length
+        ? lembrete.comentarios.map(c => `
+          <div style="margin-bottom: 8px;">
+            <small class="text-muted">${new Date(c.criadoEm).toLocaleString('pt-BR')}</small>
+            <div>${c.texto}</div>
+          </div>
+        `).join('')
+        : '<em class="text-muted">Sem comentários ainda.</em>'
+      }
+    </div>
+    <hr>
+    <input type="text" id="novoComentarioInput" class="swal2-input" placeholder="Digite um novo comentário">
+  `;
+
+  Swal.fire({
+    title: 'Comentários',
+    html: html,
+    confirmButtonText: 'Adicionar',
+    showCancelButton: true,
+    preConfirm: () => {
+      const input = document.getElementById('novoComentarioInput');
+      return input?.value?.trim();
+    }
+  }).then(result => {
+    if (result.isConfirmed && result.value) {
+      lembrete.comentarios.push({
+        id: gerarId(),
+        texto: result.value,
+        criadoEm: new Date().toISOString()
+      });
+
+      salvarLembretes();
+      renderizarLembretes();
+
+      Swal.fire('Comentado!', 'Seu comentário foi adicionado.', 'success');
+    }
+  });
+}
+
+
+function adicionarComentario(id) {
+  const input = document.getElementById(`input-comentario-${id}`);
+  if (!input || !input.value.trim()) return;
+
+  const lembrete = lembretes.find(l => l.id === id);
+  if (!lembrete) return;
+
+  lembrete.comentarios = lembrete.comentarios || [];
+  lembrete.comentarios.push({
+    id: gerarId(),
+    texto: input.value.trim(),
+    criadoEm: new Date().toISOString()
+  });
+
+  salvarLembretes();
+  renderizarLembretes();
+
+  // Reabre o popover com comentários atualizados
+  setTimeout(() => {
+    const btn = document.querySelector(`.comentario-btn[data-id='${id}']`);
+    if (btn) mostrarComentarios(id, btn);
+  }, 100);
+}
+
+document.addEventListener('click', (event) => {
+  const popovers = document.querySelectorAll('[data-bs-toggle="popover"]');
+
+  popovers.forEach(btn => {
+    const popover = bootstrap.Popover.getInstance(btn);
+    const popoverEl = document.querySelector('.popover');
+
+    if (
+      popover &&
+      popoverEl &&
+      !popoverEl.contains(event.target) &&
+      !btn.contains(event.target)
+    ) {
+      popover.dispose();
+    }
+  });
+});
+
+let lembreteAtual = null;
+
+function abrirModalInformacoes(id) {
+  const lembrete = lembretes.find(l => l.id === id);
+  if (!lembrete) return;
+
+  lembreteAtual = lembrete;
+  atualizarComentariosModal();
+
+  const modal = new bootstrap.Modal(document.getElementById('modalInfoLembrete'));
+  modal.show();
+
+  const qtd = lembrete.comentarios?.length || 0;
+  const badge = document.getElementById('badgeQtdComentarios');
+  badge.textContent = qtd;
+  badge.style.display = qtd > 0 ? 'inline-block' : 'none';
+  badge.style.color = ''
+}
+
+function formatarDataProfissional(isoString) {
+  const d = new Date(isoString);
+  const data = d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' });
+  const hora = d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+  return `${hora} - ${data}`;
+}
+
+function atualizarComentariosModal() {
+  const container = document.getElementById('comentariosConteudo');
+  container.innerHTML = '';
+
+  if (!lembreteAtual.comentarios || lembreteAtual.comentarios.length === 0) {
+    container.innerHTML = '<em class="text-muted">Sem comentários ainda.</em>';
+    return;
+  }
+
+  container.innerHTML = lembreteAtual.comentarios.map((c, i) => `
+  <div class="timeline-comentario mb-1 rounded comentario-card" data-coment-index="${i}">
+    <div class="d-flex align-items-start gap-2">
+      <div class="comment-s rounded-circle flex-shrink-0 bg-primary-subtle d-flex align-items-center justify-content-center" style="width: 36px; height: 36px;">
+        <i class="fas fa-comment-alt"></i>
+      </div>
+      <div class="flex-grow-1">
+        <div class="small text-muted">${formatarDataProfissional(c.criadoEm)}</div>
+        <div id="comentario-texto-${i}">${c.texto}</div>
+      </div>
+    </div>
+  </div>
+`).join('');
+
+document.getElementById('novoComentarioTexto').addEventListener('keydown', function (e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    document.getElementById('btnEnviarComentario')?.click();
+  }
+});
+}
+
+document.getElementById('btnEnviarComentario').addEventListener('click', () => {
+  const input = document.getElementById('novoComentarioTexto');
+  const texto = input.value.trim();
+  if (!texto) return;
+
+  lembreteAtual.comentarios = lembreteAtual.comentarios || [];
+  lembreteAtual.comentarios.push({
+    id: gerarId(),
+    texto,
+    criadoEm: new Date().toISOString()
+  });
+
+  salvarLembretes();
+  renderizarLembretes();
+  input.value = '';
+  atualizarComentariosModal();
+});

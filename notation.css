@@ -561,3 +561,70 @@ html, body {
   color: #666;
   transition: color 0.2s ease;
 }
+
+body {
+  background-color: #f0f2f5;
+  padding: 20px;
+}
+
+.coluna {
+  min-height: 80vh;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.coluna h4 {
+  text-align: center;
+  margin-bottom: 15px;
+}
+
+.coluna .sortable-area {
+  min-height: 60vh;
+}
+
+.timeline-comentario {
+  border-left: 2px solid #dee2e6;
+  padding-left: 12px;
+  position: relative;
+  background: #6164682c;
+  padding: 2px;
+}
+
+.timeline-comentario i {
+  font-size: 1rem;
+}
+
+#btnEnviarComentario i {
+  font-size: 0.9rem;
+}
+
+.comentario-card {
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  padding: 10px 12px;
+  border: 1px solid #dee2e6;
+  transition: background 0.3s ease;
+}
+
+.comentario-card:hover {
+  background-color: #dce2e9;
+}
+
+.comentario-card .text-muted {
+  font-size: 0.75rem;
+  letter-spacing: 0.3px;
+  font-weight: 500;
+}
+
+.comment-s {
+  color: #367DB5;
+}
+
+.custom-badge {
+  font-size: 0.7rem;
+  display: none;
+  background-color: #367DB5 !important;
+  font-weight: 400;
+}
