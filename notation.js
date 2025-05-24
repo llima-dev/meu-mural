@@ -1514,3 +1514,8 @@ function salvarTituloProjeto() {
   document.title = `Mural | ${titulo}`;
   return titulo;
 }
+
+function prepararNovoSnippet() {
+  document.getElementById('formNovoSnippet').reset();
+  document.getElementById('editarSnippetId').value = '';
+}

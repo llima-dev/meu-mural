@@ -94,9 +94,10 @@
       <!-- Coluna: Snippets -->
       <div class="col-md-4 mural-col-content">
         <div class="text-center mb-1">
-            <button class="btn btn-outline-secondary btn-sm no-border" data-bs-toggle="modal" data-bs-target="#modalNovoSnippet">
-                <i class="fas fa-plus"></i> Novo snippet
-            </button>
+          <button class="btn btn-outline-secondary btn-sm no-border" data-bs-toggle="modal" data-bs-target="#modalNovoSnippet"
+            onclick="prepararNovoSnippet()">
+            <i class="fas fa-plus"></i> Novo snippet
+          </button>
         </div>
         <div class="coluna">
           <h4><i class="fas fa-code"></i> Snippets <span id="count-snippets">(0)</span></h4>
@@ -250,7 +251,6 @@
             <select id="linguagemSnippet" class="form-select">
               <option value="javascript">JavaScript</option>
               <option value="python">Python</option>
-              <option value="html">HTML</option>
               <option value="css">CSS</option>
               <option value="sql">SQL</option>
               <option value="php">PHP</option>

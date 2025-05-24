@@ -723,3 +723,27 @@ body {
   background-color: #f1f3f5;
   border: 1px solid #ced4da;
 }
+
+.checklist-container {
+  max-height: 200px;
+  overflow-y: auto;
+}
+.checklist-container {
+  max-height: 180px;
+  overflow-y: auto;
+  padding-right: 8px;
+}
+
+/* Scroll customizado */
+.checklist-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.checklist-container::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 100, 100, 0.3);
+  border-radius: 4px;
+}
+
+.checklist-container::-webkit-scrollbar-track {
+  background-color: transparent;
+}
