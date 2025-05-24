@@ -100,7 +100,11 @@ let anotacoes = JSON.parse(localStorage.getItem('anotacoes')) || [];
         const checkbox = document.getElementById(`check-${index}-${i}`);
         if (checkbox) {
             checkbox.addEventListener('change', () => {
-                lembretes[index].checklist[i].feito = checkbox.checked;
+                const realIndex = lembretes.findIndex(l => l.id === item.id);
+                if (realIndex !== -1) {
+                  lembretes[realIndex].checklist[i].feito = checkbox.checked;
+                  salvarLembretes();
+                }
                 salvarLembretes();
             });
         }
