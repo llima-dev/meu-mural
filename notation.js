@@ -786,6 +786,20 @@ function salvarEdicaoAnotacao(id) {
   renderizarAnotacoes();
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+  const tituloSalvo = localStorage.getItem('muralProjetoTitulo') || '';
+  const input = document.getElementById('tituloProjeto');
+  if (input) input.value = tituloSalvo;
+  if (tituloSalvo) document.title = `Mural | ${tituloSalvo}`;
+});
+
+function salvarTituloProjeto() {
+  const input = document.getElementById('tituloProjeto');
+  const titulo = input?.value.trim() || 'meu-mural';
+  localStorage.setItem('muralProjetoTitulo', titulo);
+  return titulo;
+}
+
 function exportarJSON() {
   const dados = {
     lembretes,
@@ -793,11 +807,13 @@ function exportarJSON() {
     anotacoes
   };
 
+  const nome = localStorage.getItem('muralProjetoTitulo') || 'meu-mural';
   const blob = new Blob([JSON.stringify(dados, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
+
   a.href = url;
-  a.download = `mural_${new Date().toISOString().split('T')[0]}.json`;
+  a.download = `${nome.toLowerCase().replace(/\s+/g, '-')}-mural.json`;
   a.click();
   URL.revokeObjectURL(url);
 }
@@ -1479,4 +1495,12 @@ function abrirAnotacaoCompleta(id) {
 
   const modal = new bootstrap.Modal(document.getElementById('modalAnotacaoInfo'));
   modal.show();
+}
+
+function salvarTituloProjeto() {
+  const input = document.getElementById('tituloProjeto');
+  const titulo = input?.value.trim() || 'Mural';
+  localStorage.setItem('muralProjetoTitulo', titulo);
+  document.title = `Mural | ${titulo}`;
+  return titulo;
 }
