@@ -801,10 +801,12 @@ function salvarTituloProjeto() {
 }
 
 function exportarJSON() {
+  const tituloProjeto = localStorage.getItem('muralProjetoTitulo') || '';
   const dados = {
     lembretes,
     snippets,
-    anotacoes
+    anotacoes,
+    tituloProjeto
   };
 
   const nome = localStorage.getItem('muralProjetoTitulo') || 'meu-mural';
@@ -822,15 +824,23 @@ function importarJSON(input) {
   const file = input.files[0];
   if (!file) return;
 
-  const novoReader = new FileReader(); // use uma nova constante SEM sobrescrever
+  const novoReader = new FileReader();
 
   novoReader.addEventListener('load', function (e) {
     try {
       const dados = JSON.parse(e.target.result);
+
       if (dados.lembretes && dados.snippets && dados.anotacoes) {
         lembretes = dados.lembretes;
         snippets = dados.snippets;
         anotacoes = dados.anotacoes;
+
+        if (dados.tituloProjeto) {
+          localStorage.setItem('muralProjetoTitulo', dados.tituloProjeto);
+          const inputTitulo = document.getElementById('tituloProjeto');
+          if (inputTitulo) inputTitulo.value = dados.tituloProjeto;
+          document.title = `Mural | ${dados.tituloProjeto}`;
+        }
 
         salvarLembretes();
         salvarSnippets();
