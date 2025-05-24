@@ -70,7 +70,7 @@ Funciona 100% no navegador, sem necessidade de login, servidor ou internet. Idea
 
 ## 🖼️ Captura de tela
 
-![alt text](image.png)
+![alt text](https://github.com/user-attachments/assets/b3693649-6860-4c28-bb6b-e2a665f2d3d9)
 
 ---
 
