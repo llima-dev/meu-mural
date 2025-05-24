@@ -80,6 +80,12 @@ Este projeto está licenciado sob a [MIT License](LICENSE).
 
 ---
 
+## 📄 Documentação
+
+Acesse a documentação completa do mural no PDF abaixo:
+
+👉 [Mural v1.3.0 - Documentação (PDF)](docs/documentação_do_projeto___notation-pro.pdf)
+
 ## 🙌 Feito por
 
 **Lsantos-art** — com carinho, código e alguns alarmes esquecidos.  
