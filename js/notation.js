@@ -1551,3 +1551,10 @@ function prepararNovoSnippet() {
   document.getElementById('formNovoSnippet').reset();
   document.getElementById('editarSnippetId').value = '';
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const versaoEl = document.getElementById("versaoSistema");
+  if (typeof obterVersaoSistema === "function") {
+    versaoEl.textContent = obterVersaoSistema();
+  }
+});
