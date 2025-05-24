@@ -747,3 +747,23 @@ body {
 .checklist-container::-webkit-scrollbar-track {
   background-color: transparent;
 }
+
+.selecionarTodosArquivados label {
+  font-weight: 300;
+}
+
+.check-item:hover {
+  background-color: #dce2e9;
+  cursor: pointer !important;
+}
+
+/* Suaviza bordas e adiciona brilho ao passar o mouse */
+.hover-glow:hover {
+  transition: all 0.2s ease-in-out;
+}
+
+/* Estilo geral dos checklists no modal */
+#modalArquivados .form-check-input {
+  width: 1.2rem;
+  height: 1.2rem;
+}

@@ -984,34 +984,16 @@ function abrirModalArquivados(tipo) {
     }
 
     html += lista.map(item => {
-      let checkbox = (tipo === 'lembretes' || tipo === 'anotacoes')
-  ? `<input type="checkbox" class="form-check-input me-2" data-id="${item.id}" onchange="toggleSelecaoArquivado('${item.id}')">`
-  : '';
-
-    const cleanText = (html) => {
-    const div = document.createElement('div');
-    div.innerHTML = html || '';
-    return div.textContent || div.innerText || '';
-    };
-
-    const descricao = item.descricao || cleanText(item.conteudoHtml).slice(0, 60) || '';
-
-    return `
-        <div class="d-flex justify-content-between align-items-center border-bottom py-2">
-        <div class="d-flex align-items-start">
-            ${checkbox}
-            <div>
-            <strong>${item.titulo || 'Sem título'}</strong>
-            <div class="text-muted small">${descricao}</div>
-            </div>
+      return `
+        <div class="check-item d-flex align-items-start py-2 px-2 rounded hover-glow border mb-2">
+          <input type="checkbox" class="form-check-input mt-1 me-3 checkbox-arquivado" data-id="${item.id}" onchange="toggleSelecaoArquivado('${item.id}')">
+          <div class="flex-grow-1">
+            <strong class="fw-semibold">${item.titulo || 'Sem título'}</strong>
+          </div>
         </div>
-        <button class="btn btn-sm no-border btn-outline-secondary" onclick="desarquivar('${tipo}', '${item.id}')" title="Restaurar">
-            <i class="fas fa-undo"></i>
-        </button>
-        </div>
-    `;
+      `;
     }).join('');
-
+    
     container.innerHTML = html;
   }
 
@@ -1082,7 +1064,27 @@ function toggleSelecaoArquivado(id) {
   } else {
     arquivadosSelecionados.add(id);
   }
+
+  const total = document.querySelectorAll('#modalArquivados .checkbox-arquivado').length;
+  const marcados = document.querySelectorAll('#modalArquivados .checkbox-arquivado:checked').length;
+
+
+  const masterCheck = document.getElementById('selecionarTodosArquivados');
+  if (masterCheck) {
+    if (marcados === total && total > 0) {
+      masterCheck.checked = true;
+      masterCheck.indeterminate = false;
+    } else if (marcados > 0) {
+      masterCheck.checked = false;
+      masterCheck.indeterminate = true;
+    } else {
+      masterCheck.checked = false;
+      masterCheck.indeterminate = false;
+    }
+  }
+
   atualizarEstadoBotoesArquivados();
+  atualizarCheckboxMestre();
 }
 
 function atualizarEstadoBotoesArquivados() {
@@ -1096,27 +1098,57 @@ function atualizarEstadoBotoesArquivados() {
 }
 
 function toggleSelecionarTodosArquivados(checkbox) {
-  arquivadosSelecionados.clear();
-  const checkboxes = document.querySelectorAll('.form-check-input[data-id]');
-  checkboxes.forEach(cb => {
+  const todos = document.querySelectorAll('#modalArquivados input[type="checkbox"]');
+  todos.forEach(cb => {
     cb.checked = checkbox.checked;
     if (checkbox.checked) {
       arquivadosSelecionados.add(cb.dataset.id);
+    } else {
+      arquivadosSelecionados.delete(cb.dataset.id);
     }
   });
+
+  checkbox.indeterminate = false;
+
   atualizarEstadoBotoesArquivados();
+  atualizarCheckboxMestre();
+}
+
+function atualizarCheckboxMestre() {
+  const checkboxes = document.querySelectorAll('#modalArquivados input[type="checkbox"][data-id]');
+  const total = checkboxes.length;
+  const marcados = Array.from(checkboxes).filter(cb => cb.checked).length;
+
+  const masterCheck = document.getElementById('selecionarTodosArquivados');
+  if (!masterCheck) return;
+
+  if (marcados === total && total > 0) {
+    masterCheck.checked = true;
+    masterCheck.indeterminate = false;
+  } else if (marcados > 0) {
+    masterCheck.indeterminate = true;
+  } else {
+    masterCheck.checked = false;
+    masterCheck.indeterminate = false;
+  }
 }
 
 function restaurarSelecionadosArquivados(tipo = 'lembretes') {
+  const checkboxes = document.querySelectorAll('#modalArquivados input[type="checkbox"]:checked');
+
+  const idsSelecionados = Array.from(checkboxes)
+    .map(cb => cb.dataset.id) // aqui era o problema
+    .filter(Boolean);
+
   if (tipo === 'lembretes') {
     lembretes.forEach(l => {
-      if (arquivadosSelecionados.has(l.id)) l.arquivado = false;
+      if (idsSelecionados.includes(l.id)) l.arquivado = false;
     });
     salvarLembretes();
     renderizarLembretes();
   } else if (tipo === 'anotacoes') {
     anotacoes.forEach(a => {
-      if (arquivadosSelecionados.has(a.id)) a.arquivado = false;
+      if (idsSelecionados.includes(a.id)) a.arquivado = false;
     });
     salvarAnotacoes();
     renderizarAnotacoes();
