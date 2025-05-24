@@ -706,3 +706,20 @@ body {
 .ql-container {
   height: 300px !important;
 }
+.projeto-nome-editavel {
+  border: none;
+  background: transparent;
+  font-weight: 500;
+  font-size: 1rem;
+  padding: 2px 4px;
+  outline: none;
+  transition: background-color 0.2s ease;
+  border-radius: 4px;
+  max-width: 240px;
+}
+
+/* Ao focar, dar leve destaque */
+.projeto-nome-editavel:focus {
+  background-color: #f1f3f5;
+  border: 1px solid #ced4da;
+}

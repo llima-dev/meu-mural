@@ -21,18 +21,27 @@
 <body style="margin-top: 0; padding-top: 0;">
 
   <div class="container-fluid">
-    <div class="text-end my-1">
-    <label class="btn btn-sm btn-outline-secondary mb-0">
-        <i class="fas fa-upload"></i> Importar
-        <input type="file" id="inputImportar" accept=".json" hidden onchange="importarJSON(this)">
-    </label>
-    <button class="btn btn-sm btn-outline-secondary" onclick="exportarJSON()">
-        <i class="fas fa-download"></i> Exportar
-    </button>
-    <button class="btn btn-sm btn-outline-danger" onclick="confirmarLimpezaStorage()">
-        <i class="fas fa-trash-alt"></i> Limpar Mural
-    </button>
-    </div>
+    <div class="d-flex justify-content-between align-items-center flex-wrap my-2">
+      <div class="d-flex align-items-center gap-2 mb-2">
+        <label for="tituloProjeto" class="form-label mb-0 fw-semibold">Projeto:</label>
+        <input type="text" class="projeto-nome-editavel" id="tituloProjeto" placeholder="Digite o nome do projeto" oninput="salvarTituloProjeto()">
+      </div>
+    
+      <div class="d-flex gap-2 mt-2 mt-sm-0">
+        <label class="btn btn-sm btn-outline-secondary mb-0">
+          <i class="fas fa-upload"></i> Importar
+          <input type="file" id="inputImportar" accept=".json" hidden onchange="importarJSON(this)">
+        </label>
+    
+        <button class="btn btn-sm btn-outline-secondary" onclick="exportarJSON()">
+          <i class="fas fa-download"></i> Exportar
+        </button>
+    
+        <button class="btn btn-sm btn-outline-danger" onclick="confirmarLimpezaStorage()">
+          <i class="fas fa-trash-alt"></i> Limpar Mural
+        </button>
+      </div>
+    </div>      
 
     <div class="row gx-3">
 
