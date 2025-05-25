@@ -1655,3 +1655,14 @@ function atualizarContadorFavoritos() {
   document.getElementById('badgeFavoritosSnippets').textContent = totalSnippets;
   document.getElementById('badgeFavoritosAnotacoes').textContent = totalAnotacoes;
 }
+
+function filtrarArquivados(valor) {
+  const termo = valor.trim().toLowerCase();
+  const itens = document.querySelectorAll('#listaArquivados .check-item');
+
+  itens.forEach(item => {
+    const titulo = item.querySelector('strong')?.textContent.toLowerCase() || '';
+    item.style.setProperty('display', titulo.includes(termo) ? 'flex' : 'none', 'important');
+  });
+}
+
