@@ -8,32 +8,48 @@ const topicosHashtags = {
 };
 
 let lembretes = (JSON.parse(localStorage.getItem('lembretes')) || []).map(item => {
-        if (!item.id) {
-            item.id = gerarId();
-        }
-        return item;
-    });
+  if (!item.id) item.id = gerarId();
+  if (item.favorito === undefined) item.favorito = false;
+  return item;
+});
 
-let anotacoes = JSON.parse(localStorage.getItem('anotacoes')) || [];
+let anotacoes = (JSON.parse(localStorage.getItem('anotacoes')) || []).map(item => {
+  if (!item.id) item.id = gerarId();
+  if (item.favorito === undefined) item.favorito = false;
+  return item;
+});
 
+let snippets = (JSON.parse(localStorage.getItem('snippets') || '[]')).map(s => {
+  if (!s.id) s.id = gerarId();
+  if (s.favorito === undefined) s.favorito = false;
+  return s;
+});
 
-    function gerarId() {
-        return '_' + Math.random().toString(36).substr(2, 9);
-    }
+const filtroFavoritos = {
+  lembretes: false,
+  anotacoes: false,
+  snippets: false
+};
 
-  function salvarLembretes() {
-    localStorage.setItem('lembretes', JSON.stringify(lembretes));
-  }
+function gerarId() {
+    return '_' + Math.random().toString(36).substr(2, 9);
+}
 
-  function destacarHashtags(texto) {
-    return texto.replace(/#(\w+)/g, `<span class="hashtag">#$1</span>`);
-  }
+function salvarLembretes() {
+localStorage.setItem('lembretes', JSON.stringify(lembretes));
+}
+
+function destacarHashtags(texto) {
+return texto.replace(/#(\w+)/g, `<span class="hashtag">#$1</span>`);
+}
 
   function renderizarLembretes() {
     const container = document.getElementById('coluna-lembretes');
     container.innerHTML = '';
 
-    const ativos = lembretes.filter(l => !l.arquivado);
+    const ativos = lembretes.filter(l =>
+      !l.arquivado && (!filtroFavoritos.lembretes || l.favorito)
+    );
 
     ativos.forEach((item, index) => {
       const card = document.createElement('div');
@@ -42,20 +58,19 @@ let anotacoes = JSON.parse(localStorage.getItem('anotacoes')) || [];
       card.className = `card mb-3 ${corClasse}`;
       card.style = `position: relative;`;
       if (item.alarme) card.classList.add('card-alarme');
+      const favClass = item.favorito ? 'fa-solid fa-star' : 'fa-regular fa-star';
       card.innerHTML = `
       <div class="card-body">
-        <div class="d-flex gap-2 mb-2">
-        ${(item.tags || []).map(tag => {
-            const icone = topicosHashtags[tag]?.icon || 'fas fa-tag';
-            const cor = topicosHashtags[tag]?.cor || '#6c757d';
-            return `<i class="${icone}" style="color:${cor}; font-size: 1rem;" title="#${tag}"></i>`;
-        }).join('')}
-        </div>
             <div class="d-flex justify-content-between align-items-center mb-2">
             <div class="position-absolute top-0 end-0 m-2 drag-handle text-muted" style="cursor: grab;" title="Arrastar para mover">
                 <i class="fas fa-up-down-left-right"></i>
             </div>
-            <h5 class="card-title">${destacarHashtags(item.titulo)}</h5>
+            <div class="d-flex">
+            <button class="estrela-btn" onclick="alternarFavorito('lembrete', '${item.id}')">
+              <i class="${favClass}"></i>
+            </button>
+            <h5 class="card-title mr-3">${destacarHashtags(item.titulo)}</h5>
+            </div>
             </div>
             <p class="card-text">
             ${transformarLinks(removerHashtags(item.descricao))}
@@ -112,6 +127,7 @@ let anotacoes = JSON.parse(localStorage.getItem('anotacoes')) || [];
     });
 
     ativarSortableLembretes();
+    atualizarContadorFavoritos();
   }
 
 function adicionarLembrete(titulo, descricao, cor) {
@@ -427,8 +443,6 @@ function iniciarAutoCompleteHashtags(inputElement) {
   });
 }
 
-let snippets = JSON.parse(localStorage.getItem('snippets') || '[]');
-
 document.addEventListener('DOMContentLoaded', () => {
   iniciarAutoCompleteHashtags(document.getElementById('tituloLembrete'));
   iniciarAutoCompleteHashtags(document.getElementById('descricaoLembrete'));
@@ -444,9 +458,14 @@ function renderizarSnippets() {
   const container = document.getElementById('coluna-snippets');
   container.innerHTML = '';
 
-  snippets.forEach(snippet => {
+  const ativos = snippets.filter(s =>
+    !s.arquivado && (!filtroFavoritos.snippets || s.favorito)
+  );
+
+  ativos.forEach(snippet => {
     const card = document.createElement('div');
     card.className = 'card mb-3 snippet-card';
+    const favClass = snippet.favorito ? 'fa-solid fa-star' : 'fa-regular fa-star';
 
     card.innerHTML = `
     <div class="card-body">
@@ -454,7 +473,12 @@ function renderizarSnippets() {
         <div class="position-absolute top-0 end-0 m-2 drag-handle text-muted" style="cursor: grab;" title="Arrastar para mover">
             <i class="fas fa-up-down-left-right"></i>
         </div>
-        <h5 class="card-title mb-0">${snippet.titulo}</h5>
+        <div class="d-flex">
+        <button class="estrela-btn" onclick="alternarFavorito('snippet', '${snippet.id}')">
+          <i class="${favClass}"></i>
+        </button>
+        <h5 class="card-title">${snippet.titulo}</h5>
+        </div>
         </div>
         <p class="card-text">${snippet.descricao || ''}</p>
         <pre><code class="language-${snippet.linguagem}">${snippet.codigo}</code></pre>
@@ -477,6 +501,7 @@ function renderizarSnippets() {
 
     hljs.highlightAll();
     ativarSortableSnippets();
+    atualizarContadorFavoritos();
 }
 
 function editarSnippet(id) {
@@ -655,13 +680,16 @@ function renderizarAnotacoes() {
   const container = document.getElementById('coluna-outros');
   container.innerHTML = '';
 
-  const ativos = anotacoes.filter(a => !a.arquivado);
+  const ativos = anotacoes.filter(a =>
+    !a.arquivado && (!filtroFavoritos.anotacoes || a.favorito)
+  );
 
   ativos.forEach(anot => {
     const card = document.createElement('div');
 
     card.className = 'card mb-3 anotacao-card';
     card.dataset.id = anot.id;
+    const favClass = anot.favorito ? 'fa-solid fa-star' : 'fa-regular fa-star';
 
     card.innerHTML = `
     <div class="card-body position-relative d-flex flex-column">
@@ -669,7 +697,12 @@ function renderizarAnotacoes() {
         <i class="fas fa-up-down-left-right"></i>
       </div>
   
+      <div class="d-flex">
+      <button class="estrela-btn" onclick="alternarFavorito('anotacao', '${anot.id}')">
+        <i class="${favClass}"></i>
+      </button>
       <h5 class="card-title">${anot.titulo || 'Sem título'}</h5>
+      </div>
   
       <div class="card-text flex-grow-1">
         <div class="anotacao-conteudo-scroll">${anot.conteudoHtml}</div>
@@ -698,6 +731,7 @@ function renderizarAnotacoes() {
   });
 
   ativarSortableAnotacoes();
+  atualizarContadorFavoritos();
 }
 
 function removerAnotacao(id) {
@@ -1562,3 +1596,73 @@ document.addEventListener("DOMContentLoaded", () => {
     versaoEl.textContent = obterVersaoSistema();
   }
 });
+
+function alternarFavorito(tipo, id) {
+  let lista;
+  if (tipo === 'lembrete') lista = lembretes;
+  else if (tipo === 'snippet') lista = snippets;
+  else if (tipo === 'anotacao') lista = anotacoes;
+  else return;
+
+  const index = lista.findIndex(l => l.id === id);
+  if (index === -1) return;
+
+  lista[index].favorito = !lista[index].favorito;
+
+  if (tipo === 'lembrete') {
+    salvarLembretes();
+    renderizarLembretes();
+  } else if (tipo === 'snippet') {
+    salvarSnippets();
+    renderizarSnippets();
+  } else if (tipo === 'anotacao') {
+    salvarAnotacoes();
+    renderizarAnotacoes();
+  }
+}
+
+function alternarFiltroFavoritos(tipo) {
+  filtroFavoritos[tipo] = !filtroFavoritos[tipo];
+
+  const btn = document.getElementById(`btnFavoritos${capitalize(tipo)}`);
+  const icone = btn.querySelector('i');
+
+  if (filtroFavoritos[tipo]) {
+    btn.classList.add('ativo'); // se quiser usar um estilo extra via CSS
+    icone.classList.remove('fa-regular');
+    icone.classList.add('fa-solid');
+  } else {
+    btn.classList.remove('ativo');
+    icone.classList.remove('fa-solid');
+    icone.classList.add('fa-regular');
+  }
+
+  if (tipo === 'lembretes') renderizarLembretes();
+  else if (tipo === 'anotacoes') renderizarAnotacoes();
+  else if (tipo === 'snippets') renderizarSnippets();
+}
+
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function atualizarContadorFavoritos() {
+  const totalLembretes = lembretes.filter(l => l.favorito).length;
+  const totalSnippets = snippets.filter(s => s.favorito).length;
+  const totalAnotacoes = anotacoes.filter(a => a.favorito).length;
+
+  document.getElementById('badgeFavoritosLembretes').textContent = totalLembretes;
+  document.getElementById('badgeFavoritosSnippets').textContent = totalSnippets;
+  document.getElementById('badgeFavoritosAnotacoes').textContent = totalAnotacoes;
+}
+
+function filtrarArquivados(valor) {
+  const termo = valor.trim().toLowerCase();
+  const itens = document.querySelectorAll('#listaArquivados .check-item');
+
+  itens.forEach(item => {
+    const titulo = item.querySelector('strong')?.textContent.toLowerCase() || '';
+    item.style.setProperty('display', titulo.includes(termo) ? 'flex' : 'none', 'important');
+  });
+}
+

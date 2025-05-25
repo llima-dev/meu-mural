@@ -24,26 +24,6 @@
   background-color: #e7d79948;
 }
 
-.card-borda-amarela .card-title {
-  border-bottom: 1px inset #facc15;
-}
-
-.card-borda-vermelha .card-title {
-  border-bottom: 1px inset #dc2626;
-}
-
-.card-borda-azul .card-title {
-  border-bottom: 1px inset #01204E;
-}
-
-.card-borda-verde .card-title {
-  border-bottom: 1px inset #028391;
-}
-
-.card-sem-cor .card-title {
-  border-bottom: 1px inset #1b1b1b;
-}
-
 .no-border {
     border: none;
 }
@@ -280,9 +260,9 @@ pre code {
   font-family: 'Segoe UI Semibold', 'Roboto', sans-serif;
   font-size: 1.1rem;
   color: #212529;
-  border-bottom: 1px dashed #ccc;
   padding-bottom: 4px;
   margin-bottom: 10px;
+  margin-right: 5px !important;
 }
 
 .coluna h4 {
@@ -799,4 +779,34 @@ body {
 .btn-link-acao:hover {
   text-decoration: none;
   font-weight: bold;
+}
+
+.estrela-btn {
+  margin-top: -15px;
+  margin-left: -8px;
+  background: none;
+  border: none;
+  color: #facc15;
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 2;
+}
+.estrela-btn:hover {
+  transform: scale(1.1);
+}
+
+.estrela-filtro {
+  margin-top: -15px;
+  margin-left: -8px;
+  background: none;
+  margin-left: 5px;
+  border: none;
+  color: #facc15;
+  font-size: 1rem;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.estrela-filtro.ativo i {
+  color: #eab308;
 }
