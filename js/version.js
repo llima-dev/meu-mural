@@ -1,3 +1,3 @@
 function obterVersaoSistema() {
-  return "# v1.3.0";
+  return "# v1.4.0";
 }
