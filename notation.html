@@ -16,7 +16,7 @@
 
   <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 
-  <link rel="stylesheet" href="./notation.css">
+  <link rel="stylesheet" href="./styles/notation.css">
 </head>
 <body style="margin-top: 0; padding-top: 0;">
 
@@ -28,16 +28,16 @@
       </div>
     
       <div class="d-flex gap-2 mt-2 mt-sm-0">
-        <label class="btn btn-sm btn-outline-secondary mb-0">
+        <label class="btn btn-sm btn-outline-secondary mb-0 no-border">
           <i class="fas fa-upload"></i> Importar
           <input type="file" id="inputImportar" accept=".json" hidden onchange="importarJSON(this)">
         </label>
     
-        <button class="btn btn-sm btn-outline-secondary" onclick="exportarJSON()">
+        <button class="btn btn-sm btn-outline-secondary no-border" onclick="exportarJSON()">
           <i class="fas fa-download"></i> Exportar
         </button>
     
-        <button class="btn btn-sm btn-outline-danger" onclick="confirmarLimpezaStorage()">
+        <button class="btn btn-sm btn-outline-danger no-border" onclick="confirmarLimpezaStorage()">
           <i class="fas fa-trash-alt"></i> Limpar Mural
         </button>
       </div>
@@ -63,7 +63,7 @@
             <div class="mb-2 col-md-6">
                 <input type="text" class="form-control filtro-busca" placeholder="Buscar lembretes..." oninput="filtrarLembretes(this.value)">
             </div>
-          <div class="sortable-area coluna-scroll" id="coluna-lembretes" style="padding-top: 8px; padding-bottom: 8px;">
+          <div class="sortable-area scroll-padrao" id="coluna-lembretes" style="padding-bottom: 8px;">
             <!-- Cards serão inseridos aqui -->
           </div>
         </div>
@@ -85,7 +85,7 @@
             <div class="mb-2 col-md-6">
                 <input type="text" class="form-control filtro-busca" placeholder="Buscar anotações..." oninput="filtrarAnotacoes(this.value)">
             </div>
-          <div class="sortable-area coluna-scroll" id="coluna-outros">
+          <div class="sortable-area scroll-padrao" id="coluna-outros">
             <!-- Cards serão inseridos aqui -->
           </div>
         </div>
@@ -104,7 +104,7 @@
             <div class="mb-2 col-md-6">
                 <input type="text" class="form-control filtro-busca" placeholder="Buscar snippets..." oninput="filtrarSnippets(this.value)">
             </div>
-          <div class="sortable-area coluna-scroll" id="coluna-snippets">
+          <div class="sortable-area scroll-padrao" id="coluna-snippets">
             <!-- Cards serão inseridos aqui -->
           </div>
         </div>
