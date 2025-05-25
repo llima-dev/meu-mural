@@ -1,21 +1,47 @@
+.card-sem-cor {
+  border-left: 3px solid #1b1b1b;
+  background-color: #fff;
+  box-shadow: none !important;
+}
+
 .card-borda-azul {
-  border-left: 6px solid #01204E;
-  background-color: #e8f0fe;
+  border-left: 3px solid #00388b;
+  background-color: #8fb8ff59;
 }
 
 .card-borda-verde {
-  border-left: 6px solid #028391;
-  background-color: #e6f4ea;
+  border-left: 3px solid #028391;
+  background-color: #dcfde6ce;
 }
 
 .card-borda-vermelha {
-  border-left: 6px solid #dc2626;
-  background-color: #fdecea;
+  border-left: 3px solid #dc2626;
+  background-color: #efb5ad48;
 }
 
 .card-borda-amarela {
-  border-left: 6px solid #facc15;
-  background-color: #fff8dbbe;
+  border-left: 3px solid #facc15;
+  background-color: #e7d79948;
+}
+
+.card-borda-amarela .card-title {
+  border-bottom: 1px inset #facc15;
+}
+
+.card-borda-vermelha .card-title {
+  border-bottom: 1px inset #dc2626;
+}
+
+.card-borda-azul .card-title {
+  border-bottom: 1px inset #01204E;
+}
+
+.card-borda-verde .card-title {
+  border-bottom: 1px inset #028391;
+}
+
+.card-sem-cor .card-title {
+  border-bottom: 1px inset #1b1b1b;
 }
 
 .no-border {
@@ -115,10 +141,8 @@ pre code {
   padding: 12px;
   background-color: #ffffff;
   border: 1px solid #dee2e6;
-  border-left: 5px solid #343a40;
+  border-left: 3px solid #343a40;
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.185);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
   margin-bottom: 1rem;
   position: relative;
   z-index: 1;
@@ -155,10 +179,9 @@ pre code {
   padding: 12px;
   background-color: #ffffff;
   border: 1px solid #dee2e6;
-  border-left: 5px solid #0d6efd;
+  border-left: 3px solid #343a40;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
   margin-bottom: 1rem;
   position: relative;
   z-index: 1;
@@ -166,7 +189,7 @@ pre code {
 
 .card.snippet-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(13, 110, 253, 0.18); /* azul suave */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.185);
   z-index: 5;
 }
 
@@ -244,7 +267,7 @@ pre code {
 
 .card-alarme {
   animation: pulse 2s infinite;
-  border-left: 6px solid #ecb665;
+  border-left: 3px solid #ecb665;
   background-color: #fff3f3;
 }
 
@@ -262,76 +285,10 @@ pre code {
   margin-bottom: 10px;
 }
 
-.checklist-container .check {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 10px 12px;
-  margin-bottom: 8px;
-  background: #f9f9fb;
-  border-left: 4px solid #777777;
-  border-radius: 8px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.212);
-  transition: background 0.3s ease;
-}
-
-.checklist-container .check:hover {
-  background: #eef4ff;
-}
-
-.checklist-container input.form-check-input {
-  appearance: none;
-  width: 20px;
-  height: 20px;
-  border: 2px solid #ccc;
-  border-radius: 4px;
-  position: relative;
-  margin-right: 10px;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-}
-
-.checklist-container input.form-check-input:checked {
-  border-color: #198754;
-  background-color: #198754;
-}
-
-.checklist-container input.form-check-input:checked::after {
-  color: white;
-  position: absolute;
-  left: 4px;
-  top: 0px;
-  font-size: 0.9rem;
-  font-weight: bold;
-}
-
-.checklist-container .form-check-label {
-  flex-grow: 1;
-  font-size: 0.95rem;
-  padding: 2px 4px;
-  color: #333;
-  transition: color 0.2s ease;
-}
-
-.checklist-container .form-check-input:checked + .form-check-label {
-  color: #888;
-  text-decoration: line-through;
-}
-
-.checklist-container .btn-icon {
-  opacity: 0.5;
-  transition: opacity 0.2s ease;
-  margin-left: 6px;
-}
-
-.checklist-container .check:hover .btn-icon {
-  opacity: 1;
-}
-
 .coluna h4 {
   font-size: 1.1rem;
   font-weight: 600;
-  border-left: 5px solid #313131;
+  border-left: 3px solid #313131;
   padding-left: 10px;
   margin-bottom: 16px;
   display: flex;
@@ -739,8 +696,6 @@ body {
 }
 
 .card {
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.185);
   border-radius: 6px;
   margin-bottom: 1rem;
   position: relative;
@@ -763,4 +718,85 @@ body {
 
 .scroll-padrao {
   scrollbar-width: none; /* Firefox */
+}
+
+.checklist-container .check {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  box-shadow: none;
+  transition: background 0.2s ease, border-color 0.2s ease;
+  border-left: 3px solid #ccc;
+  border-radius: 4px;
+  background: whitesmoke;
+  padding: 6px 8px;
+}
+
+.checklist-container .check:hover {
+  background: #f4f6f8;
+  border-color: #5553;
+}
+
+.checklist-container input.form-check-input {
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid #aaa;
+  border-radius: 4px;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  position: relative;
+}
+
+.checklist-container input.form-check-input:checked {
+  background-color: #2e7d32;
+  border-color: #2e7d32;
+}
+
+.checklist-container input.form-check-input:checked::after {
+  color: white;
+  font-size: 0.7rem;
+  font-weight: bold;
+  position: absolute;
+  top: -2px;
+  left: 4px;
+}
+
+.checklist-container .form-check-label {
+  flex-grow: 1;
+  font-size: 0.9rem;
+  color: #333;
+}
+
+.checklist-container .form-check-input:checked + .form-check-label {
+  color: #999;
+  text-decoration: line-through;
+}
+
+.checklist-container .btn-icon {
+  opacity: 0;
+  margin-left: 6px;
+  color: #777;
+  transition: opacity 0.2s ease;
+}
+
+.checklist-container .check:hover .btn-icon {
+  opacity: 1;
+}
+
+.btn-link-acao {
+  font-weight: 300;
+  background: none;
+  border: none;
+  font-size: small;
+  opacity: 0.8;
+  cursor: pointer;
+  transition: color 0.2s ease;
+}
+
+.btn-link-acao:hover {
+  text-decoration: none;
+  font-weight: bold;
 }

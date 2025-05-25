@@ -139,7 +139,11 @@
             <label class="form-label">Cor do card</label>
             <div id="seletorCores" class="d-flex gap-2">
               <label class="cor-opcao">
-                <input type="radio" name="corCard" value="azul" checked>
+                <input type="radio" name="corCard" value="nenhuma" checked>
+                <span class="bolinha" style="background-color: transparent; border: 1px solid #aaa;"></span>
+              </label>
+              <label class="cor-opcao">
+                <input type="radio" name="corCard" value="azul">
                 <span class="bolinha" style="background-color: #1d4ed8;"></span>
               </label>
               <label class="cor-opcao">
@@ -195,6 +199,10 @@
             <div class="mb-3">
             <label for="editarCor" class="form-label">Cor do card</label>
             <div id="seletorEditarCores" class="d-flex gap-2">
+            <label class="cor-opcao">
+                <input type="radio" name="editarCorCard" value="nenhuma">
+                <span class="bolinha" style="background-color: transparent; border: 1px solid #aaa;"></span>
+            </label>
             <label class="cor-opcao">
                 <input type="radio" name="editarCorCard" value="azul" />
                 <span class="bolinha" style="background-color: #1d4ed8;"></span>

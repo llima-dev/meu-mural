@@ -38,7 +38,7 @@ let anotacoes = JSON.parse(localStorage.getItem('anotacoes')) || [];
     ativos.forEach((item, index) => {
       const card = document.createElement('div');
       card.dataset.id = item.id;
-      const corClasse = item.cor ? `card-borda-${item.cor}` : '';
+      const corClasse = item.cor && item.cor !== 'nenhuma' ? `card-borda-${item.cor}` : 'card-sem-cor';
       card.className = `card mb-3 ${corClasse}`;
       card.style = `position: relative;`;
       if (item.alarme) card.classList.add('card-alarme');
@@ -76,13 +76,13 @@ let anotacoes = JSON.parse(localStorage.getItem('anotacoes')) || [];
             <div class="d-flex align-items-start gap-2 mb-1 check rounded">
                 <input class="form-check-input mt-1" type="checkbox" id="check-${index}-${i}" ${chk.feito ? 'checked' : ''}>
                 <label class="form-check-label flex-grow-1 p-1" for="check-${index}-${i}">${chk.texto}</label>
-                <button class="btn btn-sm no-border btn-outline-secondary" onclick="editarChecklistItem('${item.id}', ${i})" title="Editar"><i class="fas fa-pen"></i></button>
-                <button class="btn btn-sm no-border btn-outline-secondary" onclick="removerChecklistItem('${item.id}', ${i})" title="Remover"><i class="fas fa-trash"></i></button>
+                <button class="btn-link-acao text-secondary" onclick="editarChecklistItem('${item.id}', ${i})" title="Editar">Editar</button>
+                <button class="btn-link-acao text-secondary" onclick="removerChecklistItem('${item.id}', ${i})" title="Remover">Remover</button>
             </div>
             `).join('') || ''}
           </div>
 
-        <div class="d-flex justify-content-end mt-2 gap-2">
+        <div class="d-flex justify-content-end mt-2 gap-2 bg-white rounded p-1">
             <button class="btn btn-sm no-border btn-outline-secondary" title="Arquivar" onclick="arquivarLembrete('${item.id}')"><i class="fas fa-box-archive"></i></button>
             <button class="btn btn-sm no-border btn-outline-secondary" title="Editar" onclick="editarLembrete('${item.id}')"><i class="fas fa-pen"></i></button>
             <button class="btn btn-sm no-border btn-outline-secondary" title="Adicionar check-list" onclick="adicionarChecklist('${item.id}')"><i class="fas fa-list-check"></i></button>
