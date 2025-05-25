@@ -168,18 +168,47 @@ function adicionarChecklist(id) {
 
   Swal.fire({
     title: 'Novo item da checklist',
-    input: 'text',
-    inputPlaceholder: 'Descreva a tarefa...',
+    html: `
+      <input id="inputChecklistTexto" class="swal2-input" placeholder="Descreva a tarefa...">
+      <div class="d-flex flex-wrap gap-2 justify-content-center mt-2">
+        ${['🔥', '✅', '🧠', '💡', '📌', '✨', '🚀', '❗', '📅', '❤️'].map(e => `
+          <span class="emoji-atalho" role="button" style="font-size: 1.1rem; cursor: pointer;">${e}</span>
+        `).join('')}
+      </div>
+    `,
+    preConfirm: () => {
+      const input = document.getElementById('inputChecklistTexto');
+      if (!input.value.trim()) {
+        Swal.showValidationMessage('Digite algo!');
+        return false;
+      }
+      return input.value.trim();
+    },
     showCancelButton: true,
     confirmButtonText: 'Adicionar',
-    cancelButtonText: 'Cancelar'
+    cancelButtonText: 'Cancelar',
+    didOpen: () => {
+      const input = document.getElementById('inputChecklistTexto');
+      document.querySelectorAll('.emoji-atalho').forEach(span => {
+        span.addEventListener('click', () => {
+          const pos = input.selectionStart;
+          const texto = input.value;
+          const antes = texto.slice(0, pos);
+          const depois = texto.slice(pos);
+          const emoji = span.textContent;
+          input.value = antes + emoji + depois;
+          input.focus();
+          input.setSelectionRange(pos + emoji.length, pos + emoji.length);
+        });
+      });
+    }
   }).then(result => {
-    if (result.isConfirmed && result.value.trim()) {
-      lembretes[index].checklist.push({ texto: result.value.trim(), feito: false });
+    if (result.isConfirmed && result.value) {
+      lembretes[index].checklist.push({ texto: result.value, feito: false });
       salvarLembretes();
       renderizarLembretes();
     }
-  });
+  });  
 }
 
 function removerLembrete(id) {
@@ -782,6 +811,8 @@ function editarAnotacao(id) {
   inputTitulo.value = originalTitulo;
   inputTitulo.id = `titulo-edit-${id}`;
   tituloEl.replaceWith(inputTitulo);
+
+  detectarAtalhoEmoji(inputTitulo);
 
   // Substitui conteúdo por Quill
   const conteudoDiv = card.querySelector('.card-text');
@@ -1683,3 +1714,43 @@ function filtrarArquivados(valor) {
   });
 }
 
+let campoEmojiAtivo = null;
+
+function detectarAtalhoEmoji(input) {
+  input.addEventListener('input', () => {
+    const pos = input.selectionStart;
+    const textoAntes = input.value.substring(0, pos);
+    if (textoAntes.endsWith('//')) {
+      campoEmojiAtivo = input;
+      const modal = new bootstrap.Modal(document.getElementById('modalEmojiAtalho'));
+      modal.show();
+    }
+  });
+}
+
+document.querySelectorAll('#tituloLembrete, #descricaoLembrete, #editarTitulo, #editarDescricao, #tituloSnippet, #descricaoSnippet, #tituloNota')
+  .forEach(el => detectarAtalhoEmoji(el));
+
+document.querySelectorAll('.emoji-atalho').forEach(emojiEl => {
+  emojiEl.addEventListener('click', () => {
+    if (!campoEmojiAtivo) return;
+
+    const emoji = emojiEl.textContent;
+    const pos = campoEmojiAtivo.selectionStart;
+    const texto = campoEmojiAtivo.value;
+    const antes = texto.slice(0, pos - 2); // remove //
+    const depois = texto.slice(pos);
+    campoEmojiAtivo.value = antes + emoji + depois;
+
+    campoEmojiAtivo.focus();
+    const novaPos = antes.length + emoji.length;
+    campoEmojiAtivo.setSelectionRange(novaPos, novaPos);
+
+    bootstrap.Modal.getInstance(document.getElementById('modalEmojiAtalho')).hide();
+  });
+});
+
+function abrirAjudaMural() {
+  const modal = new bootstrap.Modal(document.getElementById('modalAjudaMural'));
+  modal.show();
+}

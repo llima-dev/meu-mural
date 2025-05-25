@@ -810,3 +810,12 @@ body {
 .estrela-filtro.ativo i {
   color: #eab308;
 }
+
+.emoji-atalho {
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.emoji-atalho:hover {
+  transform: scale(1.3);
+}
