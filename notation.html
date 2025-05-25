@@ -23,6 +23,9 @@
   <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center flex-wrap my-2">
       <div class="d-flex align-items-center gap-2 mb-2">
+        <button class="btn btn-sm no-border btn-outline-secondary info-btn ms-2" onclick="abrirAjudaMural()" title="Ver recursos do mural">
+          <i class="fas fa-circle-info"></i>
+        </button>
         <label for="tituloProjeto" class="form-label mb-0 fw-semibold">Projeto:</label>
         <input type="text" class="projeto-nome-editavel" id="tituloProjeto" placeholder="Digite o nome do projeto" oninput="salvarTituloProjeto()">
       </div>
@@ -408,6 +411,71 @@
         <button class="btn btn-outline-danger btn-sm no-border" onclick="exportarAnotacaoParaPDF()">
           <i class="fas fa-file-pdf me-1"></i> Exportar como PDF
         </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalEmojiAtalho" tabindex="-1">
+  <div class="modal-dialog modal-sm modal-dialog-centered">
+    <div class="modal-content p-3">
+      <div class="d-flex flex-wrap gap-2 justify-content-center">
+        <span class="emoji-atalho">😀</span>
+        <span class="emoji-atalho">😍</span>
+        <span class="emoji-atalho">😂</span>
+        <span class="emoji-atalho">🤔</span>
+        <span class="emoji-atalho">😭</span>
+        <span class="emoji-atalho">😎</span>
+        <span class="emoji-atalho">😡</span>
+        <span class="emoji-atalho">😴</span>
+        <span class="emoji-atalho">😱</span>
+        <span class="emoji-atalho">🥳</span>
+      
+        <span class="emoji-atalho">✨</span>
+        <span class="emoji-atalho">💡</span>
+        <span class="emoji-atalho">✅</span>
+        <span class="emoji-atalho">❌</span>
+        <span class="emoji-atalho">🧠</span>
+        <span class="emoji-atalho">🔥</span>
+        <span class="emoji-atalho">🚀</span>
+        <span class="emoji-atalho">📌</span>
+        <span class="emoji-atalho">📅</span>
+        <span class="emoji-atalho">⏰</span>
+      
+        <span class="emoji-atalho">💻</span>
+        <span class="emoji-atalho">📱</span>
+        <span class="emoji-atalho">📝</span>
+        <span class="emoji-atalho">🛠️</span>
+        <span class="emoji-atalho">📂</span>
+        <span class="emoji-atalho">📈</span>
+        <span class="emoji-atalho">📉</span>
+        <span class="emoji-atalho">🔒</span>
+        <span class="emoji-atalho">🧪</span>
+        <span class="emoji-atalho">⚙️</span>
+      </div>      
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalAjudaMural" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content p-3">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="fas fa-circle-info me-2"></i>Recursos do Mural</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item"><strong>//</strong> → Digite <code>//</code> em título ou descrição para inserir emojis</li>
+          <li class="list-group-item"><strong>#hashtag</strong> → Insira tags nas descrições com <code>#</code></li>
+          <li class="list-group-item"><strong>Favoritar</strong> → Clique na estrela ⭐ para marcar como favorito</li>
+          <li class="list-group-item"><strong>Checklist</strong> → Use o botão <i class="fas fa-list-check"></i> para adicionar itens</li>
+          <li class="list-group-item"><strong>Alarme</strong> → Defina horários com o botão <i class="fas fa-bell"></i></li>
+          <li class="list-group-item"><strong>Arrastar</strong> → Mova cards com o ícone <i class="fas fa-up-down-left-right"></i></li>
+          <li class="list-group-item"><strong>Exportar</strong> → Baixe tudo em JSON</li>
+          <li class="list-group-item"><strong>Snippets</strong> → Guarde trechos de código com destaque de sintaxe</li>
+          <li class="list-group-item"><strong>Anotações livres</strong> → Use editor com formatação</li>
+        </ul>
       </div>
     </div>
   </div>
