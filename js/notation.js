@@ -735,9 +735,21 @@ function renderizarAnotacoes() {
 }
 
 function removerAnotacao(id) {
-  anotacoes = anotacoes.filter(a => a.id !== id);
-  salvarAnotacoes();
-  renderizarAnotacoes();
+  Swal.fire({
+    title: 'Remover anotação?',
+    text: 'Essa ação não poderá ser desfeita.',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sim, excluir',
+    cancelButtonText: 'Cancelar'
+  }).then(result => {
+    if (result.isConfirmed) {
+      anotacoes = anotacoes.filter(a => a.id !== id);
+      salvarAnotacoes();
+      renderizarAnotacoes();
+      Swal.fire('Removido!', 'A anotação foi excluída.', 'success');
+    }
+  });
 }
 
 function formatarData(iso) {
