@@ -127,6 +127,7 @@ return texto.replace(/#(\w+)/g, `<span class="hashtag">#$1</span>`);
     });
 
     ativarSortableLembretes();
+    atualizarContadorFavoritos();
   }
 
 function adicionarLembrete(titulo, descricao, cor) {
@@ -500,6 +501,7 @@ function renderizarSnippets() {
 
     hljs.highlightAll();
     ativarSortableSnippets();
+    atualizarContadorFavoritos();
 }
 
 function editarSnippet(id) {
@@ -729,6 +731,7 @@ function renderizarAnotacoes() {
   });
 
   ativarSortableAnotacoes();
+  atualizarContadorFavoritos();
 }
 
 function removerAnotacao(id) {
@@ -1641,4 +1644,14 @@ function alternarFiltroFavoritos(tipo) {
 
 function capitalize(str) {
   return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function atualizarContadorFavoritos() {
+  const totalLembretes = lembretes.filter(l => l.favorito).length;
+  const totalSnippets = snippets.filter(s => s.favorito).length;
+  const totalAnotacoes = anotacoes.filter(a => a.favorito).length;
+
+  document.getElementById('badgeFavoritosLembretes').textContent = totalLembretes;
+  document.getElementById('badgeFavoritosSnippets').textContent = totalSnippets;
+  document.getElementById('badgeFavoritosAnotacoes').textContent = totalAnotacoes;
 }

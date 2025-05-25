@@ -62,8 +62,8 @@
             <h4><i class="fas fa-sticky-note"></i> Lembretes <span id="count-lembretes">(0)</span></h4>
             <div class="d-flex align-items-baseline mb-2 col-md-6">
               <input type="text" class="form-control filtro-busca" placeholder="Buscar lembretes..." oninput="filtrarLembretes(this.value)">
-              <button class="estrela-filtro" onclick="alternarFiltroFavoritos('lembretes')" id="btnFavoritosLembretes" title="Mostrar favoritos">
-                <i class="fa-regular fa-star "></i>
+              <button class="estrela-filtro d-flex" onclick="alternarFiltroFavoritos('lembretes')" id="btnFavoritosLembretes" title="Mostrar favoritos">
+                <i class="fa-regular fa-star "></i><span class="badge text-dark" id="badgeFavoritosLembretes">0</span>
               </button>
             </div>
           <div class="sortable-area scroll-padrao" id="coluna-lembretes" style="padding-bottom: 8px;">
@@ -87,8 +87,8 @@
           <h4><i class="fas fa-box-open"></i> Anotação livre <span id="count-anotacoes">(0)</span></h4>
           <div class="d-flex align-items-baseline mb-2 col-md-6">
             <input type="text" class="form-control filtro-busca" placeholder="Buscar anotações..." oninput="filtrarAnotacoes(this.value)">
-            <button class="estrela-filtro" onclick="alternarFiltroFavoritos('anotacoes')" id="btnFavoritosAnotacoes" title="Mostrar favoritos">
-              <i class="fa-regular fa-star"></i>
+            <button class="estrela-filtro d-flex" onclick="alternarFiltroFavoritos('anotacoes')" id="btnFavoritosAnotacoes" title="Mostrar favoritos">
+              <i class="fa-regular fa-star"></i><span class="badge text-dark" id="badgeFavoritosAnotacoes">0</span>
             </button>
           </div>
           <div class="sortable-area scroll-padrao" id="coluna-outros">
@@ -109,8 +109,8 @@
           <h4><i class="fas fa-code"></i> Snippets <span id="count-snippets">(0)</span></h4>
           <div class="d-flex align-items-baseline mb-2 col-md-6">
             <input type="text" class="form-control filtro-busca" placeholder="Buscar snippets..." oninput="filtrarSnippets(this.value)">
-            <button class="estrela-filtro" onclick="alternarFiltroFavoritos('snippets')" id="btnFavoritosSnippets" title="Mostrar favoritos">
-              <i class="fa-regular fa-star"></i>
+            <button class="estrela-filtro d-flex" onclick="alternarFiltroFavoritos('snippets')" id="btnFavoritosSnippets" title="Mostrar favoritos">
+              <i class="fa-regular fa-star"></i><span class="badge text-dark" id="badgeFavoritosSnippets">0</span>
             </button>
           </div>          
           <div class="sortable-area scroll-padrao" id="coluna-snippets">
