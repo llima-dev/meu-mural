@@ -36,14 +36,18 @@ function gerarId() {
 }
 
 function salvarLembretes() {
-localStorage.setItem('lembretes', JSON.stringify(lembretes));
+  localStorage.setItem('lembretes', JSON.stringify(lembretes));
 }
 
 function destacarHashtags(texto) {
-return texto.replace(/#(\w+)/g, `<span class="hashtag">#$1</span>`);
+  return texto.replace(/#(\w+)/g, `<span class="hashtag">#$1</span>`);
 }
 
-  function renderizarLembretes() {
+function converterQuebrasDeLinha(texto) {
+  return texto.replace(/\n/g, '<br>');
+}
+
+function renderizarLembretes() {
     const container = document.getElementById('coluna-lembretes');
     container.innerHTML = '';
 
@@ -73,7 +77,7 @@ return texto.replace(/#(\w+)/g, `<span class="hashtag">#$1</span>`);
             </div>
             </div>
             <p class="card-text">
-            ${transformarLinks(removerHashtags(item.descricao))}
+              ${converterQuebrasDeLinha(transformarLinks(removerHashtags(item.descricao)))}
             </p>
 
             <div class="tags mt-2">
