@@ -322,7 +322,7 @@ document.getElementById('formEditarLembrete').addEventListener('submit', functio
 
 function ativarSortableLembretes() {
   new Sortable(document.getElementById('coluna-lembretes'), {
-    group: 'cards',
+    group: 'lembretes',
     animation: 150,
     handle: '.drag-handle',
     onEnd: () => {
@@ -586,7 +586,7 @@ document.getElementById('coluna-outros').addEventListener('mouseenter', () => {
 function ativarSortableSnippets() {
 new Sortable(document.getElementById('coluna-snippets'), {
   animation: 150,
-  group: 'cards',
+  group: 'snippets',
   handle: '.drag-handle',
   onEnd: () => {
     const container = document.getElementById('coluna-snippets');
@@ -902,7 +902,7 @@ function removerChecklistItem(lembreteId, itemIndex) {
 function ativarSortableAnotacoes() {
   new Sortable(document.getElementById('coluna-outros'), {
     animation: 150,
-    group: 'cards',
+    group: 'outros',
     handle: '.drag-handle',
     onEnd: () => {
       const container = document.getElementById('coluna-outros');
