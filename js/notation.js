@@ -136,19 +136,20 @@ function renderizarLembretes() {
 
 function adicionarLembrete(titulo, descricao, cor) {
   const tagsTitulo = extrairTags(titulo);
-const tagsDescricao = extrairTags(descricao);
-const tagsUnicas = [...new Set([...tagsTitulo, ...tagsDescricao])];
+  const tagsDescricao = extrairTags(descricao);
+  const tagsUnicas = [...new Set([...tagsTitulo, ...tagsDescricao])];
 
-lembretes.push({
-  id: gerarId(),
-  titulo,
-  descricao,
-  checklist: [],
-  alarme: null,
-  cor,
-  tags: tagsUnicas,
-  arquivado: false
-});
+  lembretes.unshift({
+    id: gerarId(),
+    titulo,
+    descricao,
+    checklist: [],
+    alarme: null,
+    cor,
+    tags: tagsUnicas,
+    arquivado: false,
+  });
+
   salvarLembretes();
   renderizarLembretes();
 }
@@ -567,13 +568,13 @@ document.getElementById('formNovoSnippet').addEventListener('submit', function (
     }
     } else {
     // Novo
-    snippets.push({
-        id: gerarId(),
-        titulo,
-        descricao,
-        linguagem,
-        codigo
-    });
+    snippets.unshift({
+      id: gerarId(),
+      titulo,
+      descricao,
+      linguagem,
+      codigo,
+    });  
     }
 
     salvarSnippets();
@@ -664,7 +665,7 @@ document.getElementById('formNovaAnotacao').addEventListener('submit', function 
   const conteudoHtml = quillAnotacao.root.innerHTML;
 
   if (conteudoHtml.replace(/<(.|\n)*?>/g, '').trim() !== '') {
-    anotacoes.push({
+    anotacoes.unshift({
       id: gerarId(),
       titulo,
       conteudoHtml,
