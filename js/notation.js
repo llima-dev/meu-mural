@@ -1754,3 +1754,28 @@ function abrirAjudaMural() {
   const modal = new bootstrap.Modal(document.getElementById('modalAjudaMural'));
   modal.show();
 }
+
+function aplicarModoEscuro(ativar) {
+  const body = document.body;
+  const icone = document.getElementById('iconeModoEscuro');
+  
+  if (ativar) {
+    body.classList.add('modo-escuro');
+    localStorage.setItem('modoEscuroAtivo', 'true');
+    if (icone) icone.className = 'fas fa-sun';
+  } else {
+    body.classList.remove('modo-escuro');
+    localStorage.setItem('modoEscuroAtivo', 'false');
+    if (icone) icone.className = 'fas fa-moon';
+  }
+}
+
+document.getElementById('toggleModoEscuro').addEventListener('click', () => {
+  const modoAtivo = document.body.classList.contains('modo-escuro');
+  aplicarModoEscuro(!modoAtivo);
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const preferencia = localStorage.getItem('modoEscuroAtivo') === 'true';
+  aplicarModoEscuro(preferencia);
+});
