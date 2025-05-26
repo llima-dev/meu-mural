@@ -949,3 +949,7 @@ body.modo-escuro #abasLembrete li a {
 body.modo-escuro #versaoSistema {
   color:#f0f0f0 !important;
 }
+
+body.modo-escuro #listaArquivados .text-muted {
+  color:#f0f0f0 !important;
+}
