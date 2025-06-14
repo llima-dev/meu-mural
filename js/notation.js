@@ -991,12 +991,12 @@ function editarChecklistItem(lembreteId, itemIndex, isModal = false) {
   input.style.minWidth = '0';
 
   const btnSalvar = document.createElement('button');
-  btnSalvar.className = 'btn btn-sm btn-success';
+  btnSalvar.className = 'btn btn-sm btn-outline-success';
   btnSalvar.innerHTML = '<i class="fas fa-check"></i>';
   btnSalvar.title = 'Salvar';
 
   const btnCancelar = document.createElement('button');
-  btnCancelar.className = 'btn btn-sm btn-secondary';
+  btnCancelar.className = 'btn btn-sm btn-outline-secondary';
   btnCancelar.innerHTML = '<i class="fas fa-times"></i>';
   btnCancelar.title = 'Cancelar';
 
@@ -1875,6 +1875,17 @@ function preencherAbaDetalhes(lembrete) {
   const { feitos, total, percentual } = calcularProgressoChecklist(lembrete.checklist || []);
   const corProgresso = corBarraPorcentagem(percentual);
 
+  const temChecklist = Array.isArray(lembreteAtual.checklist) && lembreteAtual.checklist.length > 0;
+
+  const sufixo = temChecklist
+    ? ` <span class="text-muted">[${feitos === total ? 'concluído' : `${percentual}% concluído`}]</span>`
+    : '';
+
+  document.getElementById('modalTituloLembrete').innerHTML = 
+    lembreteAtual?.titulo
+      ? `${lembreteAtual.titulo}${sufixo}`
+      : 'Informações do Lembrete';
+
   const barraHTML = (total > 0 && percentual > 0)
     ? `<div class="progress-check mb-2">
          <div class="progress-check-bar" style="width: ${percentual}%; background-color: ${corProgresso};">${percentual}%</div>
@@ -1896,14 +1907,17 @@ function preencherAbaDetalhes(lembrete) {
   `).join('') || '<span class="text-muted">Sem itens no checklist.</span>';
   
   document.getElementById('detalhesConteudo').innerHTML = `
-    ${barraHTML}
     <div class="mb-2">${lembrete.alarme ? `<span class="text-muted">⏰ Alarme: <strong>${lembrete.alarme}</strong></span>` : ''}</div>
     <div class="tags mb-3">
       ${extrairHashtags(lembrete.descricao).map(tag => `
         <span class="badge bg-primary-subtle text-primary fw-medium me-1">#${tag}</span>
       `).join('')}
     </div>
-    <div class="checklist-container">${checklistHTML}</div>
+    <div class="d-flex justify-content-between align-items-center mb-1">
+      <strong>Checklist</strong>
+      <small class="text-muted">${feitos} de ${total} concluídos</small>
+    </div>
+    <div class="checklist-container checklist-container-scroll checklist-container-resizable">${checklistHTML}</div>
     <div class="d-flex justify-content-end mt-3">
       <button class="btn btn-sm no-border btn-outline-secondary" title="Adicionar check-list" onclick="adicionarChecklist('${lembrete.id}')">
         <i class="fas fa-list-check"></i>
@@ -1937,3 +1951,14 @@ modalEl.addEventListener('hidden.bs.modal', () => {
 
   quillInfoLembrete = null;
 }, { once: true });
+
+document.getElementById('modalNovoChecklistItem').addEventListener('shown.bs.modal', function () {
+  document.getElementById('inputNovoChecklistTexto').focus();
+});
+
+document.getElementById('inputNovoChecklistTexto').addEventListener('keydown', function (e) {
+  if (e.key === 'Enter') {
+    e.preventDefault(); 
+    document.getElementById('btnSalvarChecklistModal').click();
+  }
+});

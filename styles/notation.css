@@ -1013,3 +1013,19 @@ body.modo-escuro #listaArquivados .text-muted {
   background-color: #dbeafe !important; /* azul bem claro */
   color: #1e3a8a;
 }
+
+.checklist-container-scroll {
+  max-height: 300px;
+  overflow-y: auto;
+  border-radius: 6px;
+}
+
+.checklist-container-resizable {
+  resize: vertical;
+  overflow: auto;
+  min-height: 150px;
+  max-height: 600px;
+  border: 1px solid #dee2e6;
+  padding: 0.5rem;
+  border-radius: 6px;
+}
