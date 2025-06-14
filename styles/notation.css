@@ -217,11 +217,6 @@ pre code {
   transition: background-color 0.2s;
 }
 
-.check :hover {
-    font-weight: 300;
-    cursor: pointer;
-}
-
 .hashtag {
   color: #0c326d;
   font-weight: 500;
@@ -1028,4 +1023,8 @@ body.modo-escuro #listaArquivados .text-muted {
   border: 1px solid #dee2e6;
   padding: 0.5rem;
   border-radius: 6px;
+}
+
+.drag-handle-check :hover {
+  cursor: grab !important;
 }

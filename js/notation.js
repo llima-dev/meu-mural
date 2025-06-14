@@ -127,15 +127,18 @@ function renderizarLembretes() {
           <div class="checklist-container">
             ${item.checklist?.map((chk, i) => `
             <div 
-                class="d-flex align-items-start gap-2 mb-1 check rounded"
-                id="check-wrapper-${item.id}-${i}"
-              >
-                <input class="form-check-input mt-1" type="checkbox" id="check-${index}-${i}" ${chk.feito ? 'checked' : ''}>
-                <label class="form-check-label flex-grow-1 p-1" for="check-${index}-${i}">${chk.texto}</label>
-                <button class="btn-link-acao text-secondary" onclick="editarChecklistItem('${item.id}', ${i})" title="Editar">Editar</button>
-                <button class="btn-link-acao text-secondary" onclick="removerChecklistItem('${item.id}', ${i})" title="Remover">Remover</button>
+              class="d-flex align-items-start gap-2 mb-1 check rounded drag-check"
+              id="check-wrapper-${item.id}-${i}"
+              data-check-index="${i}"
+              style="cursor: grab;"
+            >
+              <input class="form-check-input mt-1" type="checkbox" id="check-${index}-${i}" ${chk.feito ? 'checked' : ''}>
+              <label class="form-check-label flex-grow-1 p-1" for="check-${index}-${i}">${chk.texto}</label>
+              <button class="btn-link-acao text-secondary" onclick="editarChecklistItem('${item.id}', ${i})" title="Editar">Editar</button>
+              <button class="btn-link-acao text-secondary" onclick="removerChecklistItem('${item.id}', ${i})" title="Remover">Remover</button>
+              <i class="fas fa-up-down-left-right text-muted mt-1 drag-handle-check" title="Arrastar para reordenar"></i>
             </div>
-            `).join('') || ''}
+          `).join('') || ''}        
           </div>
           <div class="d-flex justify-content-between align-items-center mt-2 bg-white rounded p-1">
             <div style="flex: 1; max-width: 200px;">
@@ -154,7 +157,9 @@ function renderizarLembretes() {
           </div>        
         </div>
       `;
+
         container.appendChild(card);
+        ativarSortableChecklist(item.id);
 
         item.checklist?.forEach((chk, i) => {
         const checkbox = document.getElementById(`check-${index}-${i}`);
@@ -1894,15 +1899,16 @@ function preencherAbaDetalhes(lembrete) {
 
   const checklistHTML = lembrete.checklist?.map((chk, i) => `
     <div 
-      class="d-flex align-items-start gap-2 mb-1 check rounded border p-2 bg-light" 
-      id="check-wrapper-aba-${lembrete.id}-${i}" 
-      data-lembrete-id="${lembrete.id}" 
-      data-index="${i}"
+      class="d-flex align-items-start gap-2 mb-1 check rounded drag-check"
+      data-check-index="${i}"
+      style="cursor: grab;"
+      id="check-wrapper-${chk.id}-${i}"
     >
       <input class="form-check-input mt-1" type="checkbox" id="aba-check-${lembrete.id}-${i}" ${chk.feito ? 'checked' : ''}>
       <label class="form-check-label flex-grow-1 p-1" for="aba-check-${lembrete.id}-${i}">${chk.texto}</label>
       <button class="btn-link-acao text-secondary" onclick="editarChecklistItem('${lembrete.id}', ${i}, true)">Editar</button>
       <button class="btn-link-acao text-secondary" onclick="removerChecklistItem('${lembrete.id}', ${i})">Remover</button>
+      <i class="fas fa-up-down-left-right text-muted mt-1 me-1 drag-handle-check"></i>
     </div>
   `).join('') || '<span class="text-muted">Sem itens no checklist.</span>';
   
@@ -1935,7 +1941,56 @@ function preencherAbaDetalhes(lembrete) {
         preencherAbaDetalhes(lembrete);
       });
     }
-  });  
+  });
+
+  ativarSortableChecklistModal(lembrete.id);
+}
+
+function ativarSortableChecklist(lembreteId) {
+  const container = document.querySelector(`[data-id='${lembreteId}'] .checklist-container`);
+  if (!container) return;
+
+  new Sortable(container, {
+    animation: 150,
+    handle: '.drag-handle-check',
+    onEnd: () => {
+      const card = lembretes.find(l => l.id === lembreteId);
+      if (!card || !Array.isArray(card.checklist)) return;
+
+      const novaOrdem = Array.from(container.children).map(el => {
+        const index = el.dataset.checkIndex;
+        return card.checklist[parseInt(index, 10)];
+      });
+
+      card.checklist = novaOrdem;
+      salvarLembretes();
+      renderizarLembretes();
+    }
+  });
+}
+
+function ativarSortableChecklistModal(lembreteId) {
+  const container = document.querySelector(`#tabDetalhes .checklist-container`);
+  if (!container) return;
+
+  new Sortable(container, {
+    animation: 150,
+    handle: '.drag-handle-check',
+    onEnd: () => {
+      const lembrete = lembretes.find(l => l.id === lembreteId);
+      if (!lembrete || !lembrete.checklist) return;
+
+      const novaOrdem = Array.from(container.children).map(el => {
+        const index = el.dataset.checkIndex;
+        return lembrete.checklist[parseInt(index, 10)];
+      });
+
+      lembrete.checklist = novaOrdem;
+      salvarLembretes();
+      preencherAbaDetalhes(lembrete); // só atualiza a aba
+      renderizarLembretes(); // atualiza o card principal também
+    }
+  });
 }
 
 // Salva ao sair da modal
