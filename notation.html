@@ -377,15 +377,31 @@
 
         <ul class="nav nav-tabs mb-3" id="abasLembrete">
           <li class="nav-item">
-            <a class="nav-link active d-flex align-items-center gap-1" data-bs-toggle="tab" href="#tabComentarios">
+            <a class="nav-link active d-flex align-items-center gap-1" data-bs-toggle="tab" href="#tabDetalhes">
+              <i class="fas fa-list-ul"></i> Detalhes
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-1" data-bs-toggle="tab" href="#tabAnotacoes">
+              <i class="fas fa-pen"></i> Anotações
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link d-flex align-items-center gap-1" data-bs-toggle="tab" href="#tabComentarios">
               <i class="fas fa-comment-alt"></i> Comentários
-              <span id="badgeQtdComentarios" class="badge bg-primary custom-badge">0</span>
-              </a>
+              <span id="badgeQtdComentarios" class="badge bg-secondary custom-badge">0</span>
+            </a>
           </li>
         </ul>
 
         <div class="tab-content">
-          <div class="tab-pane fade show active" id="tabComentarios">
+          <div class="tab-pane fade show active" id="tabDetalhes">
+            <div id="detalhesConteudo"></div>
+          </div>
+          <div class="tab-pane fade" id="tabAnotacoes">
+            <span class="text-muted">Em breve.</span>
+          </div>
+          <div class="tab-pane fade" id="tabComentarios">
             <div id="comentariosConteudo"></div>
             <div class="mt-3 input-group input-group-sm">
               <input type="text" id="novoComentarioTexto" class="form-control" placeholder="Escreva um comentário...">
@@ -394,7 +410,7 @@
               </button>
             </div>
           </div>
-        </div>
+        </div>        
 
       </div>
     </div>

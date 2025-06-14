@@ -35,6 +35,21 @@ function gerarId() {
     return '_' + Math.random().toString(36).substr(2, 9);
 }
 
+function calcularProgressoChecklist(checklist) {
+  if (!Array.isArray(checklist) || checklist.length === 0) return { feitos: 0, total: 0, percentual: 0 };
+  const feitos = checklist.filter(item => item.feito).length;
+  const total = checklist.length;
+  const percentual = Math.round((feitos / total) * 100);
+  return { feitos, total, percentual };
+}
+
+function corBarraPorcentagem(p) {
+  if (p <= 30) return '#dc2626'; // vermelho
+  if (p <= 59) return '#f97316'; // laranja
+  if (p <= 84) return '#facc15'; // amarelo
+  return '#16a34a';              // verde
+}
+
 function salvarLembretes() {
   localStorage.setItem('lembretes', JSON.stringify(lembretes));
 }
@@ -57,6 +72,18 @@ function renderizarLembretes() {
 
     ativos.forEach((item, index) => {
       const card = document.createElement('div');
+
+      const { feitos, total, percentual } = calcularProgressoChecklist(item.checklist || []);
+      const exibirProgresso = total > 0;
+      const corProgresso = corBarraPorcentagem(percentual);
+      const barraProgressoHTML = (total > 0 && percentual > 0)
+      ? `<div class="progress-check mb-2">
+          <div class="progress-check-bar" style="width: ${percentual}%; background-color: ${corProgresso};">
+            ${percentual}%
+          </div>
+        </div>`
+      : '';
+
       card.dataset.id = item.id;
       const corClasse = item.cor && item.cor !== 'nenhuma' ? `card-borda-${item.cor}` : 'card-sem-cor';
       card.className = `card mb-3 ${corClasse}`;
@@ -76,6 +103,7 @@ function renderizarLembretes() {
             <h5 class="card-title mr-3">${destacarHashtags(item.titulo)}</h5>
             </div>
             </div>
+
             <p class="card-text">
               ${converterQuebrasDeLinha(transformarLinks(removerHashtags(item.descricao)))}
             </p>
@@ -100,17 +128,21 @@ function renderizarLembretes() {
             </div>
             `).join('') || ''}
           </div>
-
-        <div class="d-flex justify-content-end mt-2 gap-2 bg-white rounded p-1">
-            <button class="btn btn-sm no-border btn-outline-secondary" title="Arquivar" onclick="arquivarLembrete('${item.id}')"><i class="fas fa-box-archive"></i></button>
-            <button class="btn btn-sm no-border btn-outline-secondary" title="Editar" onclick="editarLembrete('${item.id}')"><i class="fas fa-pen"></i></button>
-            <button class="btn btn-sm no-border btn-outline-secondary" title="Adicionar check-list" onclick="adicionarChecklist('${item.id}')"><i class="fas fa-list-check"></i></button>
-            <button class="btn btn-sm no-border btn-outline-secondary" title="Definir alarme" onclick="definirAlarme('${item.id}')"><i class="fas fa-bell"></i></button>
-            <button class="btn btn-sm no-border btn-outline-secondary" title="Remover" onclick="removerLembrete('${item.id}')"><i class="fas fa-trash"></i></button>
-            <button class="btn btn-sm no-border btn-outline-secondary info-btn" title="Informações" onclick="abrirModalInformacoes('${item.id}')">
-              <i class="fas fa-circle-info"></i>
-            </button>
-        </div>
+          <div class="d-flex justify-content-between align-items-center mt-2 bg-white rounded p-1">
+            <div style="flex: 1; max-width: 200px;">
+              ${barraProgressoHTML}
+            </div>
+            <div class="d-flex gap-2">
+              <button class="btn btn-sm no-border btn-outline-secondary" title="Arquivar" onclick="arquivarLembrete('${item.id}')"><i class="fas fa-box-archive"></i></button>
+              <button class="btn btn-sm no-border btn-outline-secondary" title="Editar" onclick="editarLembrete('${item.id}')"><i class="fas fa-pen"></i></button>
+              <button class="btn btn-sm no-border btn-outline-secondary" title="Adicionar check-list" onclick="adicionarChecklist('${item.id}')"><i class="fas fa-list-check"></i></button>
+              <button class="btn btn-sm no-border btn-outline-secondary" title="Definir alarme" onclick="definirAlarme('${item.id}')"><i class="fas fa-bell"></i></button>
+              <button class="btn btn-sm no-border btn-outline-secondary" title="Remover" onclick="removerLembrete('${item.id}')"><i class="fas fa-trash"></i></button>
+              <button class="btn btn-sm no-border btn-outline-secondary info-btn" title="Informações" onclick="abrirModalInformacoes('${item.id}')">
+                <i class="fas fa-circle-info"></i>
+              </button>
+            </div>
+          </div>        
         </div>
       `;
         container.appendChild(card);
@@ -123,6 +155,7 @@ function renderizarLembretes() {
                 if (realIndex !== -1) {
                   lembretes[realIndex].checklist[i].feito = checkbox.checked;
                   salvarLembretes();
+                  renderizarLembretes();
                 }
                 salvarLembretes();
             });
@@ -1541,20 +1574,52 @@ document.addEventListener('click', (event) => {
 let lembreteAtual = null;
 
 function abrirModalInformacoes(id) {
-  const lembrete = lembretes.find(l => l.id === id);
-  if (!lembrete) return;
+  lembreteAtual = lembretes.find(l => l.id === id);
+  if (!lembreteAtual) return;
 
-  lembreteAtual = lembrete;
+  const { feitos, total, percentual } = calcularProgressoChecklist(lembreteAtual.checklist || []);
+  const corProgresso = corBarraPorcentagem(percentual);
+
+  const barraHTML = (total > 0 && percentual > 0)
+    ? `<div class="progress-check mb-2">
+         <div class="progress-check-bar" style="width: ${percentual}%; background-color: ${corProgresso};">${percentual}%</div>
+       </div>`
+    : '';
+
+  const checklistHTML = lembreteAtual.checklist?.map((chk, i) => `
+    <div class="d-flex align-items-start gap-2 mb-1 check rounded">
+      <input class="form-check-input mt-1" type="checkbox" id="modal-check-${i}" ${chk.feito ? 'checked' : ''}>
+      <label class="form-check-label flex-grow-1 p-1" for="modal-check-${i}">${chk.texto}</label>
+    </div>
+  `).join('') || '<span class="text-muted">Sem itens no checklist.</span>';
+
+  document.getElementById('detalhesConteudo').innerHTML = `
+    ${barraHTML}
+    <div class="mb-2">${lembreteAtual.alarme ? `<span class="text-muted">⏰ Alarme: <strong>${lembreteAtual.alarme}</strong></span>` : ''}</div>
+    <div class="tags mb-3">
+      ${extrairHashtags(lembreteAtual.descricao).map(tag => `
+        <span class="badge bg-primary-subtle text-primary fw-medium me-1">#${tag}</span>
+      `).join('')}
+    </div>
+    <div class="checklist-container">${checklistHTML}</div>
+  `;
+
+  lembreteAtual.checklist?.forEach((chk, i) => {
+    const checkbox = document.getElementById(`modal-check-${i}`);
+    if (checkbox) {
+      checkbox.addEventListener('change', () => {
+        chk.feito = checkbox.checked;
+        salvarLembretes();
+        renderizarLembretes();
+        abrirModalInformacoes(lembreteAtual.id);
+      });
+    }
+  });
+
+  preencherAbaDetalhes(lembreteAtual);
   atualizarComentariosModal();
-
   const modal = new bootstrap.Modal(document.getElementById('modalInfoLembrete'));
   modal.show();
-
-  const qtd = lembrete.comentarios?.length || 0;
-  const badge = document.getElementById('badgeQtdComentarios');
-  badge.textContent = qtd;
-  badge.style.display = qtd > 0 ? 'inline-block' : 'none';
-  badge.style.color = ''
 }
 
 function formatarDataProfissional(isoString) {
@@ -1600,7 +1665,9 @@ document.getElementById('btnEnviarComentario').addEventListener('click', () => {
   const texto = input.value.trim();
   if (!texto) return;
 
+  if (!lembreteAtual) return;
   lembreteAtual.comentarios = lembreteAtual.comentarios || [];
+
   lembreteAtual.comentarios.push({
     id: gerarId(),
     texto,
@@ -1779,3 +1846,44 @@ document.addEventListener('DOMContentLoaded', () => {
   const preferencia = localStorage.getItem('modoEscuroAtivo') === 'true';
   aplicarModoEscuro(preferencia);
 });
+
+function preencherAbaDetalhes(lembrete) {
+  const { feitos, total, percentual } = calcularProgressoChecklist(lembrete.checklist || []);
+  const corProgresso = corBarraPorcentagem(percentual);
+
+  const barraHTML = (total > 0 && percentual > 0)
+    ? `<div class="progress-check mb-2">
+         <div class="progress-check-bar" style="width: ${percentual}%; background-color: ${corProgresso};">${percentual}%</div>
+       </div>`
+    : '';
+
+  const checklistHTML = lembrete.checklist?.map((chk, i) => `
+    <div class="d-flex align-items-start gap-2 mb-1 check rounded">
+      <input class="form-check-input mt-1" type="checkbox" id="modal-check-${i}" ${chk.feito ? 'checked' : ''}>
+      <label class="form-check-label flex-grow-1 p-1" for="modal-check-${i}">${chk.texto}</label>
+    </div>
+  `).join('') || '<span class="text-muted">Sem itens no checklist.</span>';
+
+  document.getElementById('detalhesConteudo').innerHTML = `
+    ${barraHTML}
+    <div class="mb-2">${lembrete.alarme ? `<span class="text-muted">⏰ Alarme: <strong>${lembrete.alarme}</strong></span>` : ''}</div>
+    <div class="tags mb-3">
+      ${extrairHashtags(lembrete.descricao).map(tag => `
+        <span class="badge bg-primary-subtle text-primary fw-medium me-1">#${tag}</span>
+      `).join('')}
+    </div>
+    <div class="checklist-container">${checklistHTML}</div>
+  `;
+
+  lembrete.checklist?.forEach((chk, i) => {
+    const checkbox = document.getElementById(`modal-check-${i}`);
+    if (checkbox) {
+      checkbox.addEventListener('change', () => {
+        chk.feito = checkbox.checked;
+        salvarLembretes();
+        renderizarLembretes();
+        preencherAbaDetalhes(lembrete); // só atualiza conteúdo da aba, sem reabrir o modal
+      });
+    }
+  });
+}

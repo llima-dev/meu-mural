@@ -969,3 +969,47 @@ body.modo-escuro #listaArquivados .text-muted {
     min-width: 34px;
   }
 }
+
+.progress-check {
+  height: 14px;
+  border-radius: 6px;
+  overflow: hidden;
+  background-color: #e6e3e3;
+  width: 50%;
+}
+
+.progress-check-bar {
+  height: 100%;
+  text-align: center;
+  font-size: 10px;
+  font-weight: bold;
+  color: white;
+  line-height: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.nav-tabs .nav-link.active {
+  background-color: #f8f9fa; /* cor clara */
+  border-color: #dee2e6 #dee2e6 #fff;
+  color: #333;
+  font-weight: 600;
+}
+
+.nav-tabs .nav-link {
+  color: #6c757d; /* cinza claro */
+  background-color: transparent;
+  border: none;
+}
+
+.nav-tabs .nav-link:hover {
+  color: #495057;
+  background-color: #f1f1f1;
+  border-radius: 5px;
+}
+
+.custom-badge {
+  background-color: #dbeafe !important; /* azul bem claro */
+  color: #1e3a8a;
+}
