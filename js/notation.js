@@ -10,6 +10,7 @@ const topicosHashtags = {
 let lembretes = (JSON.parse(localStorage.getItem('lembretes')) || []).map(item => {
   if (!item.id) item.id = gerarId();
   if (item.favorito === undefined) item.favorito = false;
+  if (!item.hasOwnProperty('anotacaoLivre')) item.anotacaoLivre = '';
   return item;
 });
 
@@ -24,6 +25,11 @@ let snippets = (JSON.parse(localStorage.getItem('snippets') || '[]')).map(s => {
   if (s.favorito === undefined) s.favorito = false;
   return s;
 });
+
+let quillInfoLembrete = null;
+let quillToolbar = null;
+
+let lembreteChecklistAtualId = null;
 
 const filtroFavoritos = {
   lembretes: false,
@@ -120,7 +126,10 @@ function renderizarLembretes() {
 
           <div class="checklist-container">
             ${item.checklist?.map((chk, i) => `
-            <div class="d-flex align-items-start gap-2 mb-1 check rounded">
+            <div 
+                class="d-flex align-items-start gap-2 mb-1 check rounded"
+                id="check-wrapper-${item.id}-${i}"
+              >
                 <input class="form-check-input mt-1" type="checkbox" id="check-${index}-${i}" ${chk.feito ? 'checked' : ''}>
                 <label class="form-check-label flex-grow-1 p-1" for="check-${index}-${i}">${chk.texto}</label>
                 <button class="btn-link-acao text-secondary" onclick="editarChecklistItem('${item.id}', ${i})" title="Editar">Editar</button>
@@ -192,56 +201,10 @@ function extrairTags(texto) {
 }
 
 function adicionarChecklist(id) {
-  const index = lembretes.findIndex(l => l.id === id);
-  if (index === -1) return;
-
-  if (!lembretes[index].checklist) {
-    lembretes[index].checklist = [];
-  }
-
-  Swal.fire({
-    title: 'Novo item da checklist',
-    html: `
-      <input id="inputChecklistTexto" class="swal2-input" placeholder="Descreva a tarefa...">
-      <div class="d-flex flex-wrap gap-2 justify-content-center mt-2">
-        ${['🔥', '✅', '🧠', '💡', '📌', '✨', '🚀', '❗', '📅', '❤️'].map(e => `
-          <span class="emoji-atalho" role="button" style="font-size: 1.1rem; cursor: pointer;">${e}</span>
-        `).join('')}
-      </div>
-    `,
-    preConfirm: () => {
-      const input = document.getElementById('inputChecklistTexto');
-      if (!input.value.trim()) {
-        Swal.showValidationMessage('Digite algo!');
-        return false;
-      }
-      return input.value.trim();
-    },
-    showCancelButton: true,
-    confirmButtonText: 'Adicionar',
-    cancelButtonText: 'Cancelar',
-    didOpen: () => {
-      const input = document.getElementById('inputChecklistTexto');
-      document.querySelectorAll('.emoji-atalho').forEach(span => {
-        span.addEventListener('click', () => {
-          const pos = input.selectionStart;
-          const texto = input.value;
-          const antes = texto.slice(0, pos);
-          const depois = texto.slice(pos);
-          const emoji = span.textContent;
-          input.value = antes + emoji + depois;
-          input.focus();
-          input.setSelectionRange(pos + emoji.length, pos + emoji.length);
-        });
-      });
-    }
-  }).then(result => {
-    if (result.isConfirmed && result.value) {
-      lembretes[index].checklist.push({ texto: result.value, feito: false });
-      salvarLembretes();
-      renderizarLembretes();
-    }
-  });  
+  lembreteChecklistAtualId = id;
+  document.getElementById('inputNovoChecklistTexto').value = '';
+  const modal = new bootstrap.Modal(document.getElementById('modalNovoChecklistItem'));
+  modal.show();
 }
 
 function removerLembrete(id) {
@@ -352,6 +315,25 @@ document.getElementById('formNovoLembrete').addEventListener('submit', function 
     document.getElementById('formNovoLembrete').reset();
     bootstrap.Modal.getInstance(document.getElementById('modalNovoLembrete')).hide();
   }
+});
+
+document.getElementById('btnSalvarChecklistModal').addEventListener('click', () => {
+  const texto = document.getElementById('inputNovoChecklistTexto').value.trim();
+  if (!texto) return;
+
+  const index = lembretes.findIndex(l => l.id === lembreteChecklistAtualId);
+  if (index === -1) return;
+
+  lembretes[index].checklist = lembretes[index].checklist || [];
+  lembretes[index].checklist.push({ texto, feito: false });
+
+  salvarLembretes();
+  renderizarLembretes();
+
+  const modalAberto = document.getElementById('modalInfoLembrete')?.classList.contains('show');
+  if (modalAberto) preencherAbaDetalhes(lembretes[index]);
+
+  bootstrap.Modal.getInstance(document.getElementById('modalNovoChecklistItem'))?.hide();
 });
 
 function editarLembrete(id) {
@@ -985,25 +967,65 @@ function importarJSON(input) {
   novoReader.readAsText(file);
 }
 
-function editarChecklistItem(lembreteId, itemIndex) {
-  const lembreteIndex = lembretes.findIndex(l => l.id === lembreteId);
-  if (lembreteIndex === -1) return;
+function editarChecklistItem(lembreteId, itemIndex, isModal = false) {
+  const lembrete = lembretes.find(l => l.id === lembreteId);
+  if (!lembrete || !lembrete.checklist[itemIndex]) return;
 
-  Swal.fire({
-    title: 'Editar item',
-    input: 'text',
-    inputValue: lembretes[lembreteIndex].checklist[itemIndex].texto,
-    showCancelButton: true,
-    confirmButtonText: 'Salvar',
-    cancelButtonText: 'Cancelar'
-  }).then(result => {
-    if (result.isConfirmed && result.value.trim()) {
-      lembretes[lembreteIndex].checklist[itemIndex].texto = result.value.trim();
-      salvarLembretes();
-      renderizarLembretes();
-    }
+  const item = lembrete.checklist[itemIndex];
+
+  const wrapperId = isModal
+    ? `check-wrapper-aba-${lembreteId}-${itemIndex}`
+    : `check-wrapper-${lembreteId}-${itemIndex}`;
+
+  const wrapper = document.getElementById(wrapperId);
+  if (!wrapper) return;
+
+  // Limpa conteúdo e define estilo de edição
+  wrapper.innerHTML = '';
+  wrapper.className = 'd-flex align-items-center gap-2 p-1 rounded bg-light';
+
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'form-control form-control-sm flex-grow-1';
+  input.value = item.texto;
+  input.style.minWidth = '0';
+
+  const btnSalvar = document.createElement('button');
+  btnSalvar.className = 'btn btn-sm btn-success';
+  btnSalvar.innerHTML = '<i class="fas fa-check"></i>';
+  btnSalvar.title = 'Salvar';
+
+  const btnCancelar = document.createElement('button');
+  btnCancelar.className = 'btn btn-sm btn-secondary';
+  btnCancelar.innerHTML = '<i class="fas fa-times"></i>';
+  btnCancelar.title = 'Cancelar';
+
+  const salvar = () => {
+    item.texto = input.value.trim();
+    salvarLembretes();
+    renderizarLembretes();
+    if (isModal) preencherAbaDetalhes(lembrete);
+  };
+
+  const cancelar = () => {
+    renderizarLembretes();
+    if (isModal) preencherAbaDetalhes(lembrete);
+  };
+
+  btnSalvar.addEventListener('click', salvar);
+  btnCancelar.addEventListener('click', cancelar);
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') salvar();
+    if (e.key === 'Escape') cancelar();
   });
+
+  wrapper.appendChild(input);
+  wrapper.appendChild(btnSalvar);
+  wrapper.appendChild(btnCancelar);
+
+  input.focus();
 }
+
 
 function removerChecklistItem(lembreteId, itemIndex) {
   const lembreteIndex = lembretes.findIndex(l => l.id === lembreteId);
@@ -1012,6 +1034,11 @@ function removerChecklistItem(lembreteId, itemIndex) {
   lembretes[lembreteIndex].checklist.splice(itemIndex, 1);
   salvarLembretes();
   renderizarLembretes();
+
+  const modalAberto = document.getElementById('modalInfoLembrete')?.classList.contains('show');
+  if (modalAberto) {
+    preencherAbaDetalhes(lembretes[lembreteIndex]);
+  }
 }
 
 function ativarSortableAnotacoes() {
@@ -1574,51 +1601,48 @@ document.addEventListener('click', (event) => {
 let lembreteAtual = null;
 
 function abrirModalInformacoes(id) {
-  lembreteAtual = lembretes.find(l => l.id === id);
+  lembreteAtual = lembretes.find((l) => l.id === id);
   if (!lembreteAtual) return;
 
-  const { feitos, total, percentual } = calcularProgressoChecklist(lembreteAtual.checklist || []);
-  const corProgresso = corBarraPorcentagem(percentual);
+  document
+    .querySelectorAll("#tabAnotacoes .ql-toolbar, #tabAnotacoes .ql-container")
+    .forEach((el) => el.remove());
+  quillInfoLembrete = null;
 
-  const barraHTML = (total > 0 && percentual > 0)
-    ? `<div class="progress-check mb-2">
-         <div class="progress-check-bar" style="width: ${percentual}%; background-color: ${corProgresso};">${percentual}%</div>
-       </div>`
-    : '';
+  const container = document.createElement("div");
+  container.id = "quillAnotacaoModal";
+  container.style.height = "200px";
+  document.getElementById("tabAnotacoes").appendChild(container);
 
-  const checklistHTML = lembreteAtual.checklist?.map((chk, i) => `
-    <div class="d-flex align-items-start gap-2 mb-1 check rounded">
-      <input class="form-check-input mt-1" type="checkbox" id="modal-check-${i}" ${chk.feito ? 'checked' : ''}>
-      <label class="form-check-label flex-grow-1 p-1" for="modal-check-${i}">${chk.texto}</label>
-    </div>
-  `).join('') || '<span class="text-muted">Sem itens no checklist.</span>';
+  quillInfoLembrete = new Quill("#quillAnotacaoModal", {
+    theme: "snow",
+    placeholder: "Escreva suas anotações...",
+    modules: {
+      toolbar: [
+        [{ header: [1, 2, false] }],
+        ["bold", "italic", "underline"],
+        [{ list: "ordered" }, { list: "bullet" }],
+        ["link", "clean"],
+      ],
+    },
+  });
 
-  document.getElementById('detalhesConteudo').innerHTML = `
-    ${barraHTML}
-    <div class="mb-2">${lembreteAtual.alarme ? `<span class="text-muted">⏰ Alarme: <strong>${lembreteAtual.alarme}</strong></span>` : ''}</div>
-    <div class="tags mb-3">
-      ${extrairHashtags(lembreteAtual.descricao).map(tag => `
-        <span class="badge bg-primary-subtle text-primary fw-medium me-1">#${tag}</span>
-      `).join('')}
-    </div>
-    <div class="checklist-container">${checklistHTML}</div>
-  `;
+  quillInfoLembrete.root.innerHTML = lembreteAtual.anotacaoLivre || "";
 
-  lembreteAtual.checklist?.forEach((chk, i) => {
-    const checkbox = document.getElementById(`modal-check-${i}`);
-    if (checkbox) {
-      checkbox.addEventListener('change', () => {
-        chk.feito = checkbox.checked;
-        salvarLembretes();
-        renderizarLembretes();
-        abrirModalInformacoes(lembreteAtual.id);
-      });
+  quillInfoLembrete.on("text-change", () => {
+    const index = lembretes.findIndex((l) => l.id === lembreteAtual.id);
+    if (index !== -1) {
+      lembretes[index].anotacaoLivre = quillInfoLembrete.root.innerHTML;
+      salvarLembretes();
     }
   });
 
   preencherAbaDetalhes(lembreteAtual);
   atualizarComentariosModal();
-  const modal = new bootstrap.Modal(document.getElementById('modalInfoLembrete'));
+
+  const modal = new bootstrap.Modal(
+    document.getElementById("modalInfoLembrete")
+  );
   modal.show();
 }
 
@@ -1858,12 +1882,19 @@ function preencherAbaDetalhes(lembrete) {
     : '';
 
   const checklistHTML = lembrete.checklist?.map((chk, i) => `
-    <div class="d-flex align-items-start gap-2 mb-1 check rounded">
-      <input class="form-check-input mt-1" type="checkbox" id="modal-check-${i}" ${chk.feito ? 'checked' : ''}>
-      <label class="form-check-label flex-grow-1 p-1" for="modal-check-${i}">${chk.texto}</label>
+    <div 
+      class="d-flex align-items-start gap-2 mb-1 check rounded border p-2 bg-light" 
+      id="check-wrapper-aba-${lembrete.id}-${i}" 
+      data-lembrete-id="${lembrete.id}" 
+      data-index="${i}"
+    >
+      <input class="form-check-input mt-1" type="checkbox" id="aba-check-${lembrete.id}-${i}" ${chk.feito ? 'checked' : ''}>
+      <label class="form-check-label flex-grow-1 p-1" for="aba-check-${lembrete.id}-${i}">${chk.texto}</label>
+      <button class="btn-link-acao text-secondary" onclick="editarChecklistItem('${lembrete.id}', ${i}, true)">Editar</button>
+      <button class="btn-link-acao text-secondary" onclick="removerChecklistItem('${lembrete.id}', ${i})">Remover</button>
     </div>
   `).join('') || '<span class="text-muted">Sem itens no checklist.</span>';
-
+  
   document.getElementById('detalhesConteudo').innerHTML = `
     ${barraHTML}
     <div class="mb-2">${lembrete.alarme ? `<span class="text-muted">⏰ Alarme: <strong>${lembrete.alarme}</strong></span>` : ''}</div>
@@ -1873,17 +1904,36 @@ function preencherAbaDetalhes(lembrete) {
       `).join('')}
     </div>
     <div class="checklist-container">${checklistHTML}</div>
+    <div class="d-flex justify-content-end mt-3">
+      <button class="btn btn-sm no-border btn-outline-secondary" title="Adicionar check-list" onclick="adicionarChecklist('${lembrete.id}')">
+        <i class="fas fa-list-check"></i>
+      </button>
+    </div>
   `;
 
   lembrete.checklist?.forEach((chk, i) => {
-    const checkbox = document.getElementById(`modal-check-${i}`);
+    const checkbox = document.getElementById(`aba-check-${lembrete.id}-${i}`);
     if (checkbox) {
       checkbox.addEventListener('change', () => {
         chk.feito = checkbox.checked;
         salvarLembretes();
         renderizarLembretes();
-        preencherAbaDetalhes(lembrete); // só atualiza conteúdo da aba, sem reabrir o modal
+        preencherAbaDetalhes(lembrete);
       });
     }
-  });
+  });  
 }
+
+// Salva ao sair da modal
+const modalEl = document.getElementById('modalInfoLembrete');
+modalEl.addEventListener('hidden.bs.modal', () => {
+  const novaAnotacao = quillInfoLembrete.root.innerHTML;
+  const index = lembretes.findIndex(l => l.id === lembreteAtual.id);
+
+  if (index !== -1) {
+    lembretes[index].anotacaoLivre = novaAnotacao;
+    salvarLembretes();
+  }
+
+  quillInfoLembrete = null;
+}, { once: true });

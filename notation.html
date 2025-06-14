@@ -399,7 +399,7 @@
             <div id="detalhesConteudo"></div>
           </div>
           <div class="tab-pane fade" id="tabAnotacoes">
-            <span class="text-muted">Em breve.</span>
+
           </div>
           <div class="tab-pane fade" id="tabComentarios">
             <div id="comentariosConteudo"></div>
@@ -496,6 +496,24 @@
           <li class="list-group-item"><strong>Snippets</strong> → Guarde trechos de código com destaque de sintaxe</li>
           <li class="list-group-item"><strong>Anotações livres</strong> → Use editor com formatação</li>
         </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalNovoChecklistItem" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Novo item de checklist</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+      </div>
+      <div class="modal-body">
+        <input type="text" class="form-control" id="inputNovoChecklistTexto" placeholder="Descreva o item">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btnSalvarChecklistModal">Salvar</button>
       </div>
     </div>
   </div>
