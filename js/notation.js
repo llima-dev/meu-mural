@@ -1902,7 +1902,7 @@ function preencherAbaDetalhes(lembrete) {
       class="d-flex align-items-start gap-2 mb-1 check rounded drag-check"
       data-check-index="${i}"
       style="cursor: grab;"
-      id="check-wrapper-${chk.id}-${i}"
+      id="check-wrapper-aba-${lembrete.id}-${i}"
     >
       <input class="form-check-input mt-1" type="checkbox" id="aba-check-${lembrete.id}-${i}" ${chk.feito ? 'checked' : ''}>
       <label class="form-check-label flex-grow-1 p-1" for="aba-check-${lembrete.id}-${i}">${chk.texto}</label>
