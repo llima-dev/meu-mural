@@ -94,7 +94,6 @@ function renderizarLembretes() {
       const corClasse = item.cor && item.cor !== 'nenhuma' ? `card-borda-${item.cor}` : 'card-sem-cor';
       card.className = `card mb-3 ${corClasse}`;
       card.style = `position: relative;`;
-      if (item.alarme) card.classList.add('card-alarme');
       const favClass = item.favorito ? 'fa-solid fa-star' : 'fa-regular fa-star';
       card.innerHTML = `
       <div class="card-body">
@@ -106,7 +105,9 @@ function renderizarLembretes() {
             <button class="estrela-btn" onclick="alternarFavorito('lembrete', '${item.id}')">
               <i class="${favClass}"></i>
             </button>
-            <h5 class="card-title mr-3">${destacarHashtags(item.titulo)}</h5>
+            <h5 class="card-title mr-3">
+              ${destacarHashtags(item.titulo)}
+            </h5>
             </div>
             </div>
 
@@ -121,7 +122,7 @@ function renderizarLembretes() {
             </div>
 
             <p class="text-muted small mt-2">
-                ${item.alarme ? `⏰ Alarme definido para <strong>${item.alarme}</strong>` : ''}
+              ${item.prazo ? `<i class="fas fa-calendar-day me-1"></i> Prazo: <strong>${formatarPrazo(item.prazo)}</strong>` : ''}
             </p>
 
           <div class="checklist-container">
@@ -141,15 +142,20 @@ function renderizarLembretes() {
           `).join('') || ''}        
           </div>
           <div class="d-flex justify-content-between align-items-center mt-2 bg-white rounded p-1">
-            <div style="flex: 1; max-width: 200px;">
+            <div class="d-flex" style="flex: 1; max-width: 200px;">
+              ${item.prazo ? `
+                <span 
+                  class="bolinha-prazo" 
+                  style="background: ${statusPrazoCor(item.prazo)}"
+                  title="${statusPrazoTitulo(item.prazo)}"
+                ></span>
+              ` : ''}
               ${barraProgressoHTML}
             </div>
             <div class="d-flex gap-2">
               <button class="btn btn-sm no-border btn-outline-secondary" title="Arquivar" onclick="arquivarLembrete('${item.id}')"><i class="fas fa-box-archive"></i></button>
               <button class="btn btn-sm no-border btn-outline-secondary" title="Editar" onclick="editarLembrete('${item.id}')"><i class="fas fa-pen"></i></button>
               <button class="btn btn-sm no-border btn-outline-secondary" title="Adicionar check-list" onclick="adicionarChecklist('${item.id}')"><i class="fas fa-list-check"></i></button>
-              <button class="btn btn-sm no-border btn-outline-secondary" title="Definir alarme" onclick="definirAlarme('${item.id}')"><i class="fas fa-bell"></i></button>
-              <button class="btn btn-sm no-border btn-outline-secondary" title="Remover" onclick="removerLembrete('${item.id}')"><i class="fas fa-trash"></i></button>
               <button class="btn btn-sm no-border btn-outline-secondary info-btn" title="Informações" onclick="abrirModalInformacoes('${item.id}')">
                 <i class="fas fa-circle-info"></i>
               </button>
@@ -181,7 +187,7 @@ function renderizarLembretes() {
     atualizarContadorFavoritos();
   }
 
-function adicionarLembrete(titulo, descricao, cor) {
+function adicionarLembrete(titulo, descricao, cor, prazo = null) {
   const tagsTitulo = extrairTags(titulo);
   const tagsDescricao = extrairTags(descricao);
   const tagsUnicas = [...new Set([...tagsTitulo, ...tagsDescricao])];
@@ -191,15 +197,15 @@ function adicionarLembrete(titulo, descricao, cor) {
     titulo,
     descricao,
     checklist: [],
-    alarme: null,
     cor,
+    prazo,
     tags: tagsUnicas,
     arquivado: false,
   });
 
   salvarLembretes();
   renderizarLembretes();
-}
+}  
 
 function extrairTags(texto) {
   return (texto.match(/#(\w+)/g) || []).map(tag => tag.slice(1));
@@ -233,90 +239,17 @@ function removerLembrete(id) {
   });
 }
 
-function definirAlarme(id) {
-  const index = lembretes.findIndex(l => l.id === id);
-  if (index === -1) return;
-
-  const lembrete = lembretes[index];
-  const horaAtual = lembrete.alarme || '';
-
-  Swal.fire({
-    title: 'Alarme',
-    html: `
-      <label for="horaAlarme">Horário:</label>
-      <input type="time" id="horaAlarme" class="form-control mb-2" value="${horaAtual}" style="max-width: 200px; margin: 0 auto;">
-      ${horaAtual ? `<button id="removerAlarme" class="btn btn-sm btn-outline-danger mt-2">Remover alarme</button>` : ''}
-    `,
-    showCancelButton: true,
-    confirmButtonText: 'Salvar',
-    cancelButtonText: 'Cancelar',
-    didOpen: () => {
-      const btnRemover = document.getElementById('removerAlarme');
-      if (btnRemover) {
-        btnRemover.addEventListener('click', () => {
-          delete lembretes[index].alarme;
-          salvarLembretes();
-          renderizarLembretes();
-          Swal.close();
-          Swal.fire('Alarme removido!', '', 'success');
-        });
-      }
-    },
-    preConfirm: () => {
-      const hora = document.getElementById('horaAlarme').value;
-      if (!hora) {
-        Swal.showValidationMessage('Por favor, selecione um horário!');
-      }
-      return hora;
-    }
-  }).then(result => {
-    if (result.isConfirmed && result.value) {
-      lembretes[index].alarme = result.value;
-      salvarLembretes();
-      renderizarLembretes();
-      Swal.fire({
-        icon: 'success',
-        title: '⏰ Alarme salvo!',
-        text: `O lembrete tocará às ${result.value}`
-      });
-    }
-  });
-}
-
-function checarAlarme() {
-  const agora = new Date();
-  const horaAtual = agora.toTimeString().substring(0, 5);
-
-  lembretes.forEach((l, i) => {
-    if (l.alarme === horaAtual) {
-      Swal.fire({
-        icon: 'info',
-        title: '⏰ Alarme!',
-        text: `Lembrete: ${l.titulo}`,
-        timer: 4000
-      });
-
-      // Remove o alarme do lembrete
-      delete lembretes[i].alarme;
-
-      salvarLembretes();
-      renderizarLembretes(); // Atualiza o card visualmente
-    }
-  });
-}
-
-  setInterval(checarAlarme, 60000); // verifica a cada minuto
-
-  renderizarLembretes();
+renderizarLembretes();
 
 document.getElementById('formNovoLembrete').addEventListener('submit', function (e) {
   e.preventDefault();
   const titulo = document.getElementById('tituloLembrete').value.trim();
   const descricao = document.getElementById('descricaoLembrete').value.trim();
   const cor = document.getElementById('corLembrete').value;
+  const prazo = document.getElementById('prazoLembrete').value || null;
 
   if (titulo && descricao) {
-    adicionarLembrete(titulo, descricao, cor);
+    adicionarLembrete(titulo, descricao, cor, prazo);
     document.getElementById('formNovoLembrete').reset();
     bootstrap.Modal.getInstance(document.getElementById('modalNovoLembrete')).hide();
   }
@@ -349,6 +282,7 @@ function editarLembrete(id) {
   document.getElementById('editarIndex').value = index;
   document.getElementById('editarTitulo').value = item.titulo;
   document.getElementById('editarDescricao').value = item.descricao;
+  document.getElementById('editarPrazoLembrete').value = item.prazo || '';
   
   document.querySelectorAll('input[name="editarCorCard"]').forEach(input => {
       input.checked = input.value === item.cor;
@@ -373,6 +307,7 @@ document.getElementById('formEditarLembrete').addEventListener('submit', functio
   const titulo = document.getElementById('editarTitulo').value.trim();
   const descricao = document.getElementById('editarDescricao').value.trim();
   const cor = document.getElementById('editarCor').value;
+  const prazo = document.getElementById('editarPrazoLembrete').value || null;
 
   const tagsTitulo = extrairTags(titulo);
   const tagsDescricao = extrairTags(descricao);
@@ -383,6 +318,7 @@ document.getElementById('formEditarLembrete').addEventListener('submit', functio
     lembretes[index].descricao = descricao;
     lembretes[index].cor = cor;
     lembretes[index].tags = tagsUnicas;
+    lembretes[index].prazo = prazo;
 
     salvarLembretes();
     renderizarLembretes();
@@ -1913,7 +1849,6 @@ function preencherAbaDetalhes(lembrete) {
   `).join('') || '<span class="text-muted">Sem itens no checklist.</span>';
   
   document.getElementById('detalhesConteudo').innerHTML = `
-    <div class="mb-2">${lembrete.alarme ? `<span class="text-muted">⏰ Alarme: <strong>${lembrete.alarme}</strong></span>` : ''}</div>
     <div class="tags mb-3">
       ${extrairHashtags(lembrete.descricao).map(tag => `
         <span class="badge bg-primary-subtle text-primary fw-medium me-1">#${tag}</span>
@@ -2017,3 +1952,32 @@ document.getElementById('inputNovoChecklistTexto').addEventListener('keydown', f
     document.getElementById('btnSalvarChecklistModal').click();
   }
 });
+
+function formatarPrazo(isoDate) {
+  if (!isoDate) return '';
+  const [ano, mes, dia] = isoDate.split('-');
+  return `${dia}/${mes}/${ano}`;
+}
+
+function statusPrazoCor(prazo) {
+  if (!prazo) return '#bdbdbd'; // cinza se sem prazo
+
+  const hoje = new Date();
+  const prazoDt = new Date(prazo + 'T23:59:59');
+  // Prazo é só data, então garante hora máxima
+
+  if (prazoDt < hoje) return '#dc2626'; // vermelho atrasado
+  if (prazoDt.toDateString() === hoje.toDateString()) return '#facc15'; // amarelo se vence hoje
+  return '#16a34a'; // verde, ok
+}
+
+function statusPrazoTitulo(prazo) {
+  if (!prazo) return 'Sem prazo definido';
+
+  const hoje = new Date();
+  const prazoDt = new Date(prazo + 'T23:59:59');
+
+  if (prazoDt < hoje) return 'Atrasada';
+  if (prazoDt.toDateString() === hoje.toDateString()) return 'Próximo do vencimento';
+  return 'Em dia';
+}

@@ -151,6 +151,11 @@
             <label for="descricaoLembrete">Descrição</label>
           </div>
 
+          <div class="form-floating mb-3">
+            <input type="date" class="form-control" id="prazoLembrete" placeholder="Prazo">
+            <label for="prazoLembrete">Prazo</label>
+          </div>
+
           <div class="mb-3">
             <label class="form-label">Cor do card</label>
             <div id="seletorCores" class="d-flex gap-2">
@@ -212,6 +217,12 @@
                 <textarea class="form-control" placeholder="Descrição" id="editarDescricao" style="height: 250px;" required></textarea>
                 <label for="editarDescricao">Descrição</label>
             </div>
+
+            <div class="form-floating mb-3">
+              <input type="date" class="form-control" id="editarPrazoLembrete" placeholder="Prazo">
+              <label for="editarPrazoLembrete">Prazo</label>
+            </div>
+
             <div class="mb-3">
             <label for="editarCor" class="form-label">Cor do card</label>
             <div id="seletorEditarCores" class="d-flex gap-2">
@@ -490,7 +501,6 @@
           <li class="list-group-item"><strong>#hashtag</strong> → Insira tags nas descrições com <code>#</code></li>
           <li class="list-group-item"><strong>Favoritar</strong> → Clique na estrela ⭐ para marcar como favorito</li>
           <li class="list-group-item"><strong>Checklist</strong> → Use o botão <i class="fas fa-list-check"></i> para adicionar itens</li>
-          <li class="list-group-item"><strong>Alarme</strong> → Defina horários com o botão <i class="fas fa-bell"></i></li>
           <li class="list-group-item"><strong>Arrastar</strong> → Mova cards com o ícone <i class="fas fa-up-down-left-right"></i></li>
           <li class="list-group-item"><strong>Exportar</strong> → Baixe tudo em JSON</li>
           <li class="list-group-item"><strong>Snippets</strong> → Guarde trechos de código com destaque de sintaxe</li>

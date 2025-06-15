@@ -1028,3 +1028,14 @@ body.modo-escuro #listaArquivados .text-muted {
 .drag-handle-check :hover {
   cursor: grab !important;
 }
+
+.bolinha-prazo {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  border: 1.5px solid #fff;
+  cursor: pointer;
+}
