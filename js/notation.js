@@ -1986,27 +1986,33 @@ function formatarPrazo(isoDate) {
 
 function statusPrazoCor(prazo, checklist = []) {
   if (Array.isArray(checklist) && checklist.length > 0 && checklist.every(i => i.feito)) {
-    return '#16a34a'; // Verde concluído
+    return '#16a34a';
   }
-  // Mantém as regras atuais de cor do prazo
   const hoje = new Date();
-  const dataPrazo = new Date(prazo);
+  hoje.setHours(0, 0, 0, 0);
 
-  if (dataPrazo < hoje) return '#dc2626'; // vermelho
-  if ((dataPrazo - hoje) / (1000*60*60*24) <= 1) return '#facc15'; // amarelo
-  return '#16a34a'; // verde normal
+  let [ano, mes, dia] = prazo.split('-');
+  const dataPrazo = new Date(ano, mes - 1, dia);
+  dataPrazo.setHours(0, 0, 0, 0);
+
+  if (dataPrazo < hoje) return '#dc2626';
+  if (dataPrazo.getTime() === hoje.getTime()) return '#facc15';
+  return '#16a34a';
 }
 
 function statusPrazoTitulo(prazo, checklist = []) {
   if (Array.isArray(checklist) && checklist.length > 0 && checklist.every(i => i.feito)) {
     return 'Concluído';
   }
-
   const hoje = new Date();
-  const dataPrazo = new Date(prazo);
+  hoje.setHours(0, 0, 0, 0);
+
+  let [ano, mes, dia] = prazo.split('-');
+  const dataPrazo = new Date(ano, mes - 1, dia);
+  dataPrazo.setHours(0, 0, 0, 0);
 
   if (dataPrazo < hoje) return 'Atrasado';
-  if ((dataPrazo - hoje) / (1000*60*60*24) <= 1) return 'Próximo do vencimento';
+  if (dataPrazo.getTime() === hoje.getTime()) return 'Vence hoje';
   return 'Em dia';
 }
 
