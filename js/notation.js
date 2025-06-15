@@ -111,7 +111,7 @@ function renderizarLembretes() {
             </div>
             </div>
 
-            <p class="card-text">
+            <p class="card-text descricao-limite">
               ${converterQuebrasDeLinha(transformarLinks(removerHashtags(item.descricao)))}
             </p>
 
@@ -153,6 +153,9 @@ function renderizarLembretes() {
               ${barraProgressoHTML}
             </div>
             <div class="d-flex gap-2">
+              <button class="btn btn-sm no-border btn-outline-secondary" title="Remover" onclick="removerLembrete('${item.id}')">
+                <i class="fas fa-trash"></i>
+              </button>
               <button class="btn btn-sm no-border btn-outline-secondary" title="Arquivar" onclick="arquivarLembrete('${item.id}')"><i class="fas fa-box-archive"></i></button>
               <button class="btn btn-sm no-border btn-outline-secondary" title="Editar" onclick="editarLembrete('${item.id}')"><i class="fas fa-pen"></i></button>
               <button class="btn btn-sm no-border btn-outline-secondary" title="Adicionar check-list" onclick="adicionarChecklist('${item.id}')"><i class="fas fa-list-check"></i></button>
@@ -222,7 +225,6 @@ function removerLembrete(id) {
   const index = lembretes.findIndex(l => l.id === id);
   if (index === -1) return;
 
-  // Confirmação opcional
   Swal.fire({
     title: 'Tem certeza?',
     text: 'Deseja realmente excluir este lembrete?',
@@ -1960,15 +1962,14 @@ function formatarPrazo(isoDate) {
 }
 
 function statusPrazoCor(prazo) {
-  if (!prazo) return '#bdbdbd'; // cinza se sem prazo
+  if (!prazo) return '#bdbdbd';
 
   const hoje = new Date();
   const prazoDt = new Date(prazo + 'T23:59:59');
-  // Prazo é só data, então garante hora máxima
 
-  if (prazoDt < hoje) return '#dc2626'; // vermelho atrasado
-  if (prazoDt.toDateString() === hoje.toDateString()) return '#facc15'; // amarelo se vence hoje
-  return '#16a34a'; // verde, ok
+  if (prazoDt < hoje) return '#dc2626';
+  if (prazoDt.toDateString() === hoje.toDateString()) return '#facc15';
+  return '#16a34a';
 }
 
 function statusPrazoTitulo(prazo) {

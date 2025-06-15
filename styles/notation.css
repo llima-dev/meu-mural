@@ -1039,3 +1039,25 @@ body.modo-escuro #listaArquivados .text-muted {
   border: 1.5px solid #fff;
   cursor: pointer;
 }
+
+.descricao-limite {
+  max-height: 110px;           /* Ajuste conforme seu layout */
+  overflow-y: auto;
+  white-space: pre-line;       /* Mantém \n do usuário */
+  word-break: break-word;
+  font-size: 1rem;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+  padding-right: 2px;          /* Evita corte do scroll */
+  background: transparent;
+  border-radius: 2px;
+  transition: background 0.2s;
+}
+.descricao-limite::-webkit-scrollbar {
+  width: 6px;
+  background: transparent;
+}
+.descricao-limite::-webkit-scrollbar-thumb {
+  background: #e0e0e0;
+  border-radius: 4px;
+}
