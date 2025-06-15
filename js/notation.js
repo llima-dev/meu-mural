@@ -142,16 +142,21 @@ function renderizarLembretes() {
           `).join('') || ''}        
           </div>
           <div class="d-flex justify-content-between align-items-center mt-2 bg-white rounded p-1">
-            <div class="d-flex" style="flex: 1; max-width: 200px;">
-              ${item.prazo ? `
-                <span 
-                  class="bolinha-prazo" 
-                  style="background: ${statusPrazoCor(item.prazo)}"
-                  title="${statusPrazoTitulo(item.prazo)}"
-                ></span>
-              ` : ''}
+              <div class="status-container d-flex" style="flex: 1; max-width: 200px;">
+              ${
+                estaConcluido(item.checklist)
+                  ? `<small class="bandeira-concluido" title="Concluído"><i class="fa-solid fa-flag-checkered text-secondary"></i></small>`
+                  : (item.prazo
+                      ? `<span 
+                            class="bolinha-prazo" 
+                            style="background: ${statusPrazoCor(item.prazo, item.checklist)}"
+                            title="${statusPrazoTitulo(item.prazo, item.checklist)}"
+                          ></span>`
+                      : ''
+                    )
+              }
               ${barraProgressoHTML}
-            </div>
+            </div>        
             <div class="d-flex gap-2">
               <button class="btn btn-sm no-border btn-outline-secondary" title="Remover" onclick="removerLembrete('${item.id}')">
                 <i class="fas fa-trash"></i>
@@ -1820,13 +1825,31 @@ function preencherAbaDetalhes(lembrete) {
 
   const temChecklist = Array.isArray(lembreteAtual.checklist) && lembreteAtual.checklist.length > 0;
 
-  const sufixo = temChecklist
-    ? ` <span class="text-muted">[${feitos === total ? 'concluído' : `${percentual}% concluído`}]</span>`
-    : '';
+  const sufixo = temChecklist && !estaConcluido(lembreteAtual.checklist)
+  ? ` <span class="text-muted">[${percentual}% concluído]</span>`
+  : '';
 
-  document.getElementById('modalTituloLembrete').innerHTML = 
+  let statusHtml = '';
+  if (estaConcluido(lembreteAtual.checklist)) {
+    statusHtml = `
+      <small class="bandeira-concluido bandeira-detalhe" title="Concluído">
+        <i class="fa-solid fa-flag-checkered text-secondary"></i>
+      </small>
+    `;
+  } else if (lembreteAtual?.prazo) {
+    statusHtml = `
+      <span 
+        class="bolinha-prazo me-1" 
+        style="background: ${statusPrazoCor(lembreteAtual.prazo, lembreteAtual.checklist)}"
+        title="${statusPrazoTitulo(lembreteAtual.prazo, lembreteAtual.checklist)}"
+      ></span>
+    `;
+  }
+
+  // No título:
+  document.getElementById('modalTituloLembrete').innerHTML =
     lembreteAtual?.titulo
-      ? `${lembreteAtual.titulo}${sufixo}`
+      ? `${statusHtml} ${lembreteAtual.titulo}${sufixo}`
       : 'Informações do Lembrete';
 
   const barraHTML = (total > 0 && percentual > 0)
@@ -1961,24 +1984,32 @@ function formatarPrazo(isoDate) {
   return `${dia}/${mes}/${ano}`;
 }
 
-function statusPrazoCor(prazo) {
-  if (!prazo) return '#bdbdbd';
-
+function statusPrazoCor(prazo, checklist = []) {
+  if (Array.isArray(checklist) && checklist.length > 0 && checklist.every(i => i.feito)) {
+    return '#16a34a'; // Verde concluído
+  }
+  // Mantém as regras atuais de cor do prazo
   const hoje = new Date();
-  const prazoDt = new Date(prazo + 'T23:59:59');
+  const dataPrazo = new Date(prazo);
 
-  if (prazoDt < hoje) return '#dc2626';
-  if (prazoDt.toDateString() === hoje.toDateString()) return '#facc15';
-  return '#16a34a';
+  if (dataPrazo < hoje) return '#dc2626'; // vermelho
+  if ((dataPrazo - hoje) / (1000*60*60*24) <= 1) return '#facc15'; // amarelo
+  return '#16a34a'; // verde normal
 }
 
-function statusPrazoTitulo(prazo) {
-  if (!prazo) return 'Sem prazo definido';
+function statusPrazoTitulo(prazo, checklist = []) {
+  if (Array.isArray(checklist) && checklist.length > 0 && checklist.every(i => i.feito)) {
+    return 'Concluído';
+  }
 
   const hoje = new Date();
-  const prazoDt = new Date(prazo + 'T23:59:59');
+  const dataPrazo = new Date(prazo);
 
-  if (prazoDt < hoje) return 'Atrasada';
-  if (prazoDt.toDateString() === hoje.toDateString()) return 'Próximo do vencimento';
+  if (dataPrazo < hoje) return 'Atrasado';
+  if ((dataPrazo - hoje) / (1000*60*60*24) <= 1) return 'Próximo do vencimento';
   return 'Em dia';
+}
+
+function estaConcluido(checklist = []) {
+  return Array.isArray(checklist) && checklist.length > 0 && checklist.every(i => i.feito);
 }

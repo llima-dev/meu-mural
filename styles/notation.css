@@ -1053,11 +1053,30 @@ body.modo-escuro #listaArquivados .text-muted {
   border-radius: 2px;
   transition: background 0.2s;
 }
+
 .descricao-limite::-webkit-scrollbar {
   width: 6px;
   background: transparent;
 }
+
 .descricao-limite::-webkit-scrollbar-thumb {
   background: #e0e0e0;
   border-radius: 4px;
+}
+
+.bandeira-concluido {
+  display: inline-block;
+  font-size: 10px;
+  vertical-align: middle;
+  margin-right: 5px;
+  color: #000000;
+  opacity: 80%;
+}
+
+.status-container{
+  justify-content: baseline;
+}
+
+.bandeira-detalhe {
+  vertical-align: super;
 }
