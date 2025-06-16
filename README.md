@@ -45,7 +45,7 @@
 
 ## 🚀 Como usar
 
-1. Acesse: 👉 [https://llima-dev.github.io/notation-pro/notation.html](https://llima-dev.github.io/notation-pro/notation.html)  
+1. Acesse: 👉 [https://llima-dev.github.io/meu-mural/notation.html](https://llima-dev.github.io/meu-mural/notation.html)  
 2. Pronto! Todos os dados são salvos automaticamente no seu navegador via `localStorage`.
 
 ---
