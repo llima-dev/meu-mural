@@ -81,6 +81,7 @@ document.getElementById('formNovoLembrete').addEventListener('submit', function 
   if (titulo && descricao) {
     adicionarLembrete(titulo, descricao, cor, prazo);
     document.getElementById('formNovoLembrete').reset();
+    document.getElementById('corLembrete').value = 'nenhuma';
     bootstrap.Modal.getInstance(document.getElementById('modalNovoLembrete')).hide();
   }
 });
