@@ -71,7 +71,13 @@
         <div class="coluna">
             <h4><i class="fas fa-sticky-note"></i> Lembretes <span id="count-lembretes">(0)</span></h4>
             <div class="d-flex align-items-baseline mb-2 col-md-6">
-              <input type="text" class="form-control filtro-busca" placeholder="Buscar lembretes..." oninput="filtrarLembretes(this.value)">
+              <input type="text" class="form-control filtro-busca" id="inputFiltroLembrete" placeholder="Buscar lembretes..." oninput="renderizarLembretes()">
+              <select class="form-select ms-2" style="max-width: 120px;" id="filtroStatusLembrete" onchange="renderizarLembretes()">
+                <option value="">Todos</option>
+                <option value="concluido">Concluídos</option>
+                <option value="atrasado">Atrasados</option>
+                <option value="hoje">Vence hoje</option>
+              </select>
               <button class="estrela-filtro d-flex" onclick="alternarFiltroFavoritos('lembretes')" id="btnFavoritosLembretes" title="Mostrar favoritos">
                 <i class="fa-regular fa-star "></i><span class="badge text-dark" id="badgeFavoritosLembretes">0</span>
               </button>
@@ -96,7 +102,7 @@
         <div class="coluna">
           <h4><i class="fas fa-box-open"></i> Anotação livre <span id="count-anotacoes">(0)</span></h4>
           <div class="d-flex align-items-baseline mb-2 col-md-6">
-            <input type="text" class="form-control filtro-busca" placeholder="Buscar anotações..." oninput="filtrarAnotacoes(this.value)">
+            <input type="text" id="termoFiltroAnotacao" class="form-control filtro-busca" placeholder="Buscar anotações..." oninput="filtrarAnotacoes(this.value)">
             <button class="estrela-filtro d-flex" onclick="alternarFiltroFavoritos('anotacoes')" id="btnFavoritosAnotacoes" title="Mostrar favoritos">
               <i class="fa-regular fa-star"></i><span class="badge text-dark" id="badgeFavoritosAnotacoes">0</span>
             </button>
@@ -584,6 +590,9 @@
   
   <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
 
+  <script src="./js/helper.js"></script>
+  <script src="./js/render.js"></script>
+  <script src="./js/filtros.js"></script>
   <script src="./js/notation.js"></script>
   <script src="./js/analytics.js"></script>
 
