@@ -228,18 +228,6 @@ document.getElementById('formNovoSnippet').addEventListener('submit', function (
   }
 });
 
-document.getElementById('coluna-lembretes').addEventListener('mouseenter', () => {
-  atualizarFavicon(favicons.lembretes);
-});
-
-document.getElementById('coluna-snippets').addEventListener('mouseenter', () => {
-  atualizarFavicon(favicons.snippets);
-});
-
-document.getElementById('coluna-outros').addEventListener('mouseenter', () => {
-  atualizarFavicon(favicons.outros);
-});
-
 function salvarAnotacoes() {
   localStorage.setItem('anotacoes', JSON.stringify(anotacoes));
 }

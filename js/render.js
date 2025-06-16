@@ -300,3 +300,51 @@ function renderizarSnippets() {
       ativarSortableSnippets();
       atualizarContadorFavoritos();
   }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    // Logo: bounce e shake
+    anime({
+      targets: '#mm-logo',
+      scale: [0, 1.12, 1],
+      opacity: [0, 1],
+      easing: 'easeOutElastic(1, .8)',
+      duration: 1200,
+      delay: 100,
+      complete: function() {
+        anime({
+          targets: '#mm-logo',
+          translateX: [
+            { value: -8, duration: 60 },
+            { value: 8, duration: 60 },
+            { value: -6, duration: 50 },
+            { value: 6, duration: 50 },
+            { value: -4, duration: 40 },
+            { value: 4, duration: 40 },
+            { value: 0, duration: 30 }
+          ],
+          easing: 'easeInOutSine',
+          complete: function() {
+            // Anima o texto depois do shake
+            anime({
+              targets: '#mm-titulo',
+              opacity: [0, 1],
+              translateY: [16, 0],
+              scale: [0.92, 1],
+              easing: 'easeOutCubic',
+              duration: 500
+            });
+          }
+        });
+      }
+    });
+  
+    setTimeout(() => {
+      const splash = document.getElementById('splash-screen');
+      if (splash) {
+        splash.style.transition = 'opacity 0.3s';
+        splash.style.opacity = '0';
+        setTimeout(() => splash.remove(), 600);
+      }
+    }, 2500);
+  });
+  

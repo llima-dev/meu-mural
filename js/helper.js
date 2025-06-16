@@ -176,23 +176,6 @@ function copiarCodigo(id) {
   }
 }
 
-const favicons = {
-  lembretes:
-    "https://em-content.zobj.net/thumbs/240/apple/354/pushpin_1f4cc.png", // 📌
-  snippets: "https://img.icons8.com/ios-filled/50/000000/source-code.png", // </>
-  outros: "https://img.icons8.com/ios-filled/50/000000/combo-chart.png", // 📈
-};
-
-function atualizarFavicon(url) {
-  let link = document.querySelector("link[rel~='icon']");
-  if (!link) {
-    link = document.createElement("link");
-    link.rel = "icon";
-    document.head.appendChild(link);
-  }
-  link.href = url;
-}
-
 function ativarSortableSnippets() {
   new Sortable(document.getElementById("coluna-snippets"), {
     animation: 150,
