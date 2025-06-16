@@ -43,6 +43,25 @@
         <button class="btn btn-sm btn-outline-danger no-border" onclick="confirmarLimpezaStorage()">
           <i class="fas fa-trash-alt"></i> Limpar Mural
         </button>
+
+          <!-- Dropdown de colunas -->
+        <div class="dropdown">
+          <button class="btn btn-outline-secondary btn-sm dropdown-toggle no-border" type="button" id="dropdownColunas" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-eye"></i> Colunas
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="dropdownColunas">
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="#" id="toggleColunaAnotacoes">
+                <i class="fas fa-eye me-2" id="iconColunaAnotacoes"></i> Anotações
+              </a>
+            </li>
+            <li>
+              <a class="dropdown-item d-flex align-items-center" href="#" id="toggleColunaSnippets">
+                <i class="fas fa-eye me-2" id="iconColunaSnippets"></i> Snippets
+              </a>
+            </li>
+          </ul>
+        </div>
         
         <button id="toggleModoEscuro" class="btn btn-sm no-border btn-outline-secondary" title="Alternar modo escuro">
           <i id="iconeModoEscuro" class="fas fa-moon"></i>
@@ -55,7 +74,7 @@
         <hr>
 
       <!-- Coluna: Lembretes -->
-      <div class="col-md-4 mural-col-content">
+      <div class="col-md-4 mural-col-content col-lembretes">
         <div class="text-center mb-1">
             <button class="btn btn-outline-secondary btn-sm no-border" data-bs-toggle="modal" data-bs-target="#modalNovoLembrete">
                 <i class="fas fa-plus"></i> Novo Lembrete
@@ -71,25 +90,25 @@
         <div class="coluna">
             <h4><i class="fas fa-sticky-note"></i> Lembretes <span id="count-lembretes">(0)</span></h4>
             <div class="d-flex align-items-baseline mb-2 col-md-6">
-              <input type="text" class="form-control filtro-busca" id="inputFiltroLembrete" placeholder="Buscar lembretes..." oninput="renderizarLembretes()">
-              <select class="form-select ms-2" style="max-width: 120px;" id="filtroStatusLembrete" onchange="renderizarLembretes()">
+              <input type="text" class="form-control filtro-busca col-md-10" id="inputFiltroLembrete" placeholder="Buscar lembretes..." oninput="renderizarLembretes()">
+              <select class="form-select ms-2" style="max-width: 110px;" id="filtroStatusLembrete" onchange="renderizarLembretes()">
                 <option value="">Todos</option>
                 <option value="concluido">Concluídos</option>
                 <option value="atrasado">Atrasados</option>
                 <option value="hoje">Vence hoje</option>
               </select>
-              <button class="estrela-filtro d-flex" onclick="alternarFiltroFavoritos('lembretes')" id="btnFavoritosLembretes" title="Mostrar favoritos">
+              <button class="estrela-filtro d-flex col-md-2" onclick="alternarFiltroFavoritos('lembretes')" id="btnFavoritosLembretes" title="Mostrar favoritos">
                 <i class="fa-regular fa-star "></i><span class="badge text-dark" id="badgeFavoritosLembretes">0</span>
               </button>
             </div>
-          <div class="sortable-area scroll-padrao" id="coluna-lembretes" style="padding-bottom: 8px;">
+          <div class="sortable-area scroll-padrao row g-2" id="coluna-lembretes" style="padding-bottom: 8px;">
             <!-- Cards serão inseridos aqui -->
           </div>
         </div>
       </div>
 
       <!-- Coluna: Outros -->
-      <div class="col-md-4 mural-col-content">
+      <div class="col-md-4 mural-col-content col-anotacoes">
         <div class="text-center mb-1">
             <button class="btn btn-outline-secondary btn-sm no-border" data-bs-toggle="modal" data-bs-target="#modalNovaAnotacao">
                 <i class="fas fa-plus"></i> Nova anotação livre
@@ -114,7 +133,7 @@
       </div>
 
       <!-- Coluna: Snippets -->
-      <div class="col-md-4 mural-col-content">
+      <div class="col-md-4 mural-col-content col-snippets">
         <div class="text-center mb-1">
           <button class="btn btn-outline-secondary btn-sm no-border" data-bs-toggle="modal" data-bs-target="#modalNovoSnippet"
             onclick="prepararNovoSnippet()">

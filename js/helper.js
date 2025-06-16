@@ -48,29 +48,29 @@ function extrairTags(texto) {
 }
 
 function ativarSortableLembretes() {
-  new Sortable(document.getElementById("coluna-lembretes"), {
-    group: "lembretes",
-    animation: 150,
-    handle: ".drag-handle",
-    onEnd: () => {
-      const container = document.getElementById("coluna-lembretes");
-      const novaOrdem = [];
+  const container = document.getElementById("coluna-lembretes");
+  if (!container) return;
 
-      Array.from(container.children).forEach((card) => {
-        const id = card.dataset.id;
-        const lembrete = lembretes.find((l) => l.id === id);
-        if (lembrete) {
-          novaOrdem.push(lembrete);
-        }
+  Sortable.create(container, {
+    handle: ".drag-lembrete",
+    animation: 150,
+    ghostClass: "sortable-ghost",
+    onEnd: function (evt) {
+      const novosIds = Array.from(container.children)
+        .map((col) => {
+          return col.firstChild?.dataset.id;
+        })
+        .filter(Boolean);
+
+      lembretes.sort((a, b) => {
+        return novosIds.indexOf(a.id) - novosIds.indexOf(b.id);
       });
 
-      // Reescreve o array
-      lembretes.length = 0;
-      novaOrdem.forEach((l) => lembretes.push(l));
       salvarLembretes();
+      renderizarLembretes();
     },
   });
-}
+}  
 
 function mostrarSugestoesHashtag(sugestoes, input, cursorPos) {
   let container = input.parentNode;
@@ -505,11 +505,14 @@ function toggleSelecaoArquivado(id) {
     arquivadosSelecionados.add(id);
   }
 
-  const total = document.querySelectorAll('#modalArquivados .checkbox-arquivado').length;
-  const marcados = document.querySelectorAll('#modalArquivados .checkbox-arquivado:checked').length;
+  const total = document.querySelectorAll(
+    "#modalArquivados .checkbox-arquivado"
+  ).length;
+  const marcados = document.querySelectorAll(
+    "#modalArquivados .checkbox-arquivado:checked"
+  ).length;
 
-
-  const masterCheck = document.getElementById('selecionarTodosArquivados');
+  const masterCheck = document.getElementById("selecionarTodosArquivados");
   if (masterCheck) {
     if (marcados === total && total > 0) {
       masterCheck.checked = true;
@@ -530,16 +533,18 @@ function toggleSelecaoArquivado(id) {
 function atualizarEstadoBotoesArquivados() {
   const temSelecao = arquivadosSelecionados.size > 0;
 
-  const btnRestaurar = document.getElementById('btnRestaurarSelecionados');
-  const btnExcluir = document.getElementById('btnExcluirSelecionados');
+  const btnRestaurar = document.getElementById("btnRestaurarSelecionados");
+  const btnExcluir = document.getElementById("btnExcluirSelecionados");
 
   if (btnRestaurar) btnRestaurar.disabled = !temSelecao;
   if (btnExcluir) btnExcluir.disabled = !temSelecao;
 }
 
 function toggleSelecionarTodosArquivados(checkbox) {
-  const todos = document.querySelectorAll('#modalArquivados input[type="checkbox"]');
-  todos.forEach(cb => {
+  const todos = document.querySelectorAll(
+    '#modalArquivados input[type="checkbox"]'
+  );
+  todos.forEach((cb) => {
     cb.checked = checkbox.checked;
     if (checkbox.checked) {
       arquivadosSelecionados.add(cb.dataset.id);
@@ -555,11 +560,13 @@ function toggleSelecionarTodosArquivados(checkbox) {
 }
 
 function atualizarCheckboxMestre() {
-  const checkboxes = document.querySelectorAll('#modalArquivados input[type="checkbox"][data-id]');
+  const checkboxes = document.querySelectorAll(
+    '#modalArquivados input[type="checkbox"][data-id]'
+  );
   const total = checkboxes.length;
-  const marcados = Array.from(checkboxes).filter(cb => cb.checked).length;
+  const marcados = Array.from(checkboxes).filter((cb) => cb.checked).length;
 
-  const masterCheck = document.getElementById('selecionarTodosArquivados');
+  const masterCheck = document.getElementById("selecionarTodosArquivados");
   if (!masterCheck) return;
 
   if (marcados === total && total > 0) {
@@ -573,46 +580,52 @@ function atualizarCheckboxMestre() {
   }
 }
 
-function restaurarSelecionadosArquivados(tipo = 'lembretes') {
-  const checkboxes = document.querySelectorAll('#modalArquivados input[type="checkbox"]:checked');
+function restaurarSelecionadosArquivados(tipo = "lembretes") {
+  const checkboxes = document.querySelectorAll(
+    '#modalArquivados input[type="checkbox"]:checked'
+  );
 
   const idsSelecionados = Array.from(checkboxes)
-    .map(cb => cb.dataset.id) // aqui era o problema
+    .map((cb) => cb.dataset.id) // aqui era o problema
     .filter(Boolean);
 
-  if (tipo === 'lembretes') {
-    lembretes.forEach(l => {
+  if (tipo === "lembretes") {
+    lembretes.forEach((l) => {
       if (idsSelecionados.includes(l.id)) l.arquivado = false;
     });
     salvarLembretes();
     renderizarLembretes();
-  } else if (tipo === 'anotacoes') {
-    anotacoes.forEach(a => {
+  } else if (tipo === "anotacoes") {
+    anotacoes.forEach((a) => {
       if (idsSelecionados.includes(a.id)) a.arquivado = false;
     });
     salvarAnotacoes();
     renderizarAnotacoes();
   }
 
-  const modal = bootstrap.Modal.getInstance(document.getElementById('modalArquivados'));
+  const modal = bootstrap.Modal.getInstance(
+    document.getElementById("modalArquivados")
+  );
   if (modal) modal.hide();
 
   setTimeout(() => abrirModalArquivados(tipo), 300);
   atualizarContagens();
 }
 
-function excluirSelecionadosArquivados(tipo = 'lembretes') {
-  if (tipo === 'lembretes') {
-    lembretes = lembretes.filter(l => !arquivadosSelecionados.has(l.id));
+function excluirSelecionadosArquivados(tipo = "lembretes") {
+  if (tipo === "lembretes") {
+    lembretes = lembretes.filter((l) => !arquivadosSelecionados.has(l.id));
     salvarLembretes();
     renderizarLembretes();
-  } else if (tipo === 'anotacoes') {
-    anotacoes = anotacoes.filter(a => !arquivadosSelecionados.has(a.id));
+  } else if (tipo === "anotacoes") {
+    anotacoes = anotacoes.filter((a) => !arquivadosSelecionados.has(a.id));
     salvarAnotacoes();
     renderizarAnotacoes();
   }
 
-  const modal = bootstrap.Modal.getInstance(document.getElementById('modalArquivados'));
+  const modal = bootstrap.Modal.getInstance(
+    document.getElementById("modalArquivados")
+  );
   if (modal) modal.hide();
 
   setTimeout(() => abrirModalArquivados(tipo), 300);
@@ -621,21 +634,21 @@ function excluirSelecionadosArquivados(tipo = 'lembretes') {
 
 function confirmarLimpezaStorage() {
   Swal.fire({
-    icon: 'warning',
-    title: 'Tem certeza?',
-    text: 'Essa ação irá apagar todos os lembretes, anotações e snippets do mural.',
+    icon: "warning",
+    title: "Tem certeza?",
+    text: "Essa ação irá apagar todos os lembretes, anotações e snippets do mural.",
     showCancelButton: true,
-    confirmButtonText: 'Sim, apagar tudo!',
-    cancelButtonText: 'Cancelar'
+    confirmButtonText: "Sim, apagar tudo!",
+    cancelButtonText: "Cancelar",
   }).then((result) => {
     if (result.isConfirmed) {
       localStorage.clear();
       Swal.fire({
-        icon: 'success',
-        title: 'Mural limpo!',
-        text: 'Tudo foi apagado com sucesso.',
+        icon: "success",
+        title: "Mural limpo!",
+        text: "Tudo foi apagado com sucesso.",
         timer: 1500,
-        showConfirmButton: false
+        showConfirmButton: false,
       }).then(() => location.reload());
     }
   });
@@ -643,24 +656,24 @@ function confirmarLimpezaStorage() {
 
 function transformarLinks(texto) {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
-  return texto.replace(urlRegex, url => {
+  return texto.replace(urlRegex, (url) => {
     return `<a href="${url}" target="_blank" rel="noopener noreferrer">${url}</a>`;
   });
 }
 
 function removerHashtags(texto) {
-  return texto.replace(/#[\w\u00C0-\u017F-]+/g, '').trim();
+  return texto.replace(/#[\w\u00C0-\u017F-]+/g, "").trim();
 }
 
 function extrairHashtags(texto) {
   const matches = texto.match(/#[\w\u00C0-\u017F-]+/g);
-  return matches ? matches.map(tag => tag.substring(1)) : [];
+  return matches ? matches.map((tag) => tag.substring(1)) : [];
 }
 
 function destacarTextoPreservandoHTML(elemento, termo) {
   if (!termo) return;
 
-  const regex = new RegExp(`(${termo})`, 'gi');
+  const regex = new RegExp(`(${termo})`, "gi");
   const walker = document.createTreeWalker(
     elemento,
     NodeFilter.SHOW_TEXT,
@@ -673,11 +686,11 @@ function destacarTextoPreservandoHTML(elemento, termo) {
     textos.push(walker.currentNode);
   }
 
-  textos.forEach(node => {
+  textos.forEach((node) => {
     const textoOriginal = node.textContent;
     if (regex.test(textoOriginal)) {
-      const span = document.createElement('span');
-      span.innerHTML = textoOriginal.replace(regex, '<mark>$1</mark>');
+      const span = document.createElement("span");
+      span.innerHTML = textoOriginal.replace(regex, "<mark>$1</mark>");
       node.parentNode.replaceChild(span, node);
     }
   });
@@ -685,26 +698,43 @@ function destacarTextoPreservandoHTML(elemento, termo) {
 
 function destacarLinks(texto) {
   const regex = /((https?:\/\/|www\.)[^\s]+)/gi;
-  return texto.replace(regex, url => {
-    const href = url.startsWith('http') ? url : `https://${url}`;
+  return texto.replace(regex, (url) => {
+    const href = url.startsWith("http") ? url : `https://${url}`;
     return `<a href="${href}" target="_blank" rel="noopener noreferrer">${url}</a>`;
   });
 }
 
 function atualizarContagens() {
-  const elLembretes = document.getElementById('count-lembretes');
-  const elArquivadosLembretes = document.getElementById('count-arquivados-lembretes');
-  const elAnotacoes = document.getElementById('count-anotacoes');
-  const elArquivadosAnotacoes = document.getElementById('count-arquivados-anotacoes');
-  const elSnippets = document.getElementById('count-snippets');
+  const elLembretes = document.getElementById("count-lembretes");
+  const elArquivadosLembretes = document.getElementById(
+    "count-arquivados-lembretes"
+  );
+  const elAnotacoes = document.getElementById("count-anotacoes");
+  const elArquivadosAnotacoes = document.getElementById(
+    "count-arquivados-anotacoes"
+  );
+  const elSnippets = document.getElementById("count-snippets");
 
-  if (elLembretes) elLembretes.textContent = `(${lembretes.filter(l => !l.arquivado).length})`;
-  if (elArquivadosLembretes) elArquivadosLembretes.textContent = `(${lembretes.filter(l => l.arquivado).length})`;
+  if (elLembretes)
+    elLembretes.textContent = `(${
+      lembretes.filter((l) => !l.arquivado).length
+    })`;
+  if (elArquivadosLembretes)
+    elArquivadosLembretes.textContent = `(${
+      lembretes.filter((l) => l.arquivado).length
+    })`;
 
-  if (elAnotacoes) elAnotacoes.textContent = `(${anotacoes.filter(a => !a.arquivado).length})`;
-  if (elArquivadosAnotacoes) elArquivadosAnotacoes.textContent = `(${anotacoes.filter(a => a.arquivado).length})`;
+  if (elAnotacoes)
+    elAnotacoes.textContent = `(${
+      anotacoes.filter((a) => !a.arquivado).length
+    })`;
+  if (elArquivadosAnotacoes)
+    elArquivadosAnotacoes.textContent = `(${
+      anotacoes.filter((a) => a.arquivado).length
+    })`;
 
-  if (elSnippets) elSnippets.textContent = `(${snippets.filter(s => !s.arquivado).length})`;
+  if (elSnippets)
+    elSnippets.textContent = `(${snippets.filter((s) => !s.arquivado).length})`;
 }
 
 function formatarDataProfissional(isoString) {
@@ -912,3 +942,131 @@ function getStatusPrazoLembrete(lembrete) {
   if (dataPrazo.getTime() === hoje.getTime()) return "hoje";
   return "emdia";
 }
+
+function atualizarColunasVisiveis() {
+  const colLembretes = document.querySelector(".col-lembretes");
+  const colAnotacoes = document.querySelector(".col-anotacoes");
+  const colSnippets = document.querySelector(".col-snippets");
+
+  // Descobre quais estão visíveis
+  const visibles = [
+    { el: colLembretes, key: "lembretes" },
+    { el: colAnotacoes, key: "anotacoes" },
+    { el: colSnippets, key: "snippets" },
+  ].filter((c) => !c.el.classList.contains("d-none"));
+
+  // Limpa classes anteriores
+  [colLembretes, colAnotacoes, colSnippets].forEach((c) => {
+    c.classList.remove(
+      "col-12",
+      "col-md-8",
+      "col-md-4",
+      "col-md-6",
+      "col-md-3"
+    );
+  });
+
+  // Só lembretes visível
+  if (visibles.length === 1 && visibles[0].key === "lembretes") {
+    colLembretes.classList.add("col-12");
+  }
+  // Duas colunas visíveis
+  else if (visibles.length === 2) {
+    // Se Lembretes + Anotações
+    if (!colSnippets.classList.contains("d-none")) {
+      // Lembretes + Snippets
+      colLembretes.classList.add("col-md-8");
+      colSnippets.classList.add("col-md-4");
+    } else if (!colAnotacoes.classList.contains("d-none")) {
+      // Lembretes + Anotações
+      colLembretes.classList.add("col-md-8");
+      colAnotacoes.classList.add("col-md-4");
+    }
+  }
+  // Três colunas visíveis (padrão)
+  else {
+    colLembretes.classList.add("col-md-4");
+    colAnotacoes.classList.add("col-md-4");
+    colSnippets.classList.add("col-md-4");
+  }
+}  
+
+document
+  .getElementById("toggleColunaAnotacoes")
+  .addEventListener("click", function (e) {
+    e.preventDefault();
+    const col = document.querySelector(".col-anotacoes");
+    col.classList.toggle("d-none");
+    const icon = document.getElementById("iconColunaAnotacoes");
+    icon.className = col.classList.contains("d-none")
+      ? "fas fa-eye-slash me-2"
+      : "fas fa-eye me-2";
+    atualizarColunasVisiveis();
+    salvarPreferenciasColunas();
+  });
+
+document
+  .getElementById("toggleColunaSnippets")
+  .addEventListener("click", function (e) {
+    e.preventDefault();
+    const col = document.querySelector(".col-snippets");
+    col.classList.toggle("d-none");
+    const icon = document.getElementById("iconColunaSnippets");
+    icon.className = col.classList.contains("d-none")
+      ? "fas fa-eye-slash me-2"
+      : "fas fa-eye me-2";
+    atualizarColunasVisiveis();
+    salvarPreferenciasColunas();
+  });
+
+// Persistir preferências
+function salvarPreferenciasColunas() {
+  const prefs = {
+    anotacoes: !document
+      .querySelector(".col-anotacoes")
+      .classList.contains("d-none"),
+    snippets: !document
+      .querySelector(".col-snippets")
+      .classList.contains("d-none"),
+  };
+  localStorage.setItem("preferenciasColunas", JSON.stringify(prefs));
+}
+
+function restaurarPreferenciasColunas() {
+  const prefs = JSON.parse(localStorage.getItem("preferenciasColunas") || "{}");
+  if (prefs.anotacoes === false) {
+    document.querySelector(".col-anotacoes").classList.add("d-none");
+    document
+      .getElementById("toggleColunaAnotacoes")
+      .querySelector("i").className = "fas fa-eye-slash";
+  }
+  if (prefs.snippets === false) {
+    document.querySelector(".col-snippets").classList.add("d-none");
+    document
+      .getElementById("toggleColunaSnippets")
+      .querySelector("i").className = "fas fa-eye-slash";
+  }
+  atualizarColunasVisiveis();
+}
+
+function alternarColuna(nomeColuna) {
+  atualizarColunasVisiveis();
+  renderizarLembretes();
+}
+
+document
+  .getElementById("toggleColunaAnotacoes")
+  .addEventListener("click", (e) => {
+    e.preventDefault();
+    alternarColuna("anotacoes");
+  });
+
+document
+  .getElementById("toggleColunaSnippets")
+  .addEventListener("click", (e) => {
+    e.preventDefault();
+    alternarColuna("snippets");
+  });
+
+// Chame isso quando a página carregar
+document.addEventListener("DOMContentLoaded", restaurarPreferenciasColunas);
