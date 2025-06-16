@@ -1,92 +1,85 @@
-# 🧱 Mural Interativo
+<p align="center">
+  <img src="assets/logo-2.png" alt="Logo Meu Mural" width="100" />
+</p>
 
-Organize seus lembretes, snippets de código e anotações livres — tudo em um só lugar.  
-Funciona 100% no navegador, sem necessidade de login, servidor ou internet. Ideal para desenvolvedores, estudantes e criadores de conteúdo.
+<h1 align="center">Meu Mural</h1>
+
+<p align="center">
+  Organize lembretes, snippets e anotações diretamente no navegador — leve, funcional e 100% offline.
+</p>
 
 ---
 
-## ✨ Funcionalidades
+## Sobre o projeto
 
-- ✅ Lembretes com:
-  - Título, descrição e seleção de cor
-  - Checklist interativo
-  - Alarme com notificação local
-  - Hashtags com ícones e autocompletar
+**Meu Mural** é uma ferramenta pessoal de produtividade, ideal para quem precisa organizar tarefas, salvar códigos e escrever anotações rápidas. Funciona inteiramente no navegador, sem necessidade de servidor, login ou conexão com a internet. Seus dados são salvos localmente, com suporte a exportação e importação.
 
-- 📄 Anotações com editor rich text (Quill)
-- 💻 Snippets com realce de sintaxe (`highlight.js`)
-- 🏷️ Hashtags visuais e categorizáveis
-- 📦 Armazenamento via `localStorage` (nada vai pra nuvem)
-- 🔄 Exportação/Importação de backup em `.json`
-- 🧩 Drag & drop com `SortableJS`
-- 🔍 Busca por palavra-chave em tempo real
-- 🌙 Leve, responsivo e pronto para GitHub Pages
+---
+
+## Funcionalidades
+
+- **Lembretes interativos**
+  - Título, descrição, cor e prazo
+  - Checklists com barra de progresso e status (atrasado, hoje, em dia, concluído)
+  - Ícones visuais, favoritos e filtros por status
+
+- **Snippets de código**
+  - Editor com destaque de sintaxe (`highlight.js`)
+  - Título, descrição, linguagem e conteúdo
+  - Filtros por palavra-chave, favoritos e ordenação via drag & drop
+
+- **Anotações livres**
+  - Editor rich text (Quill) com formatação, listas, links e cabeçalhos
+  - Exportação para PDF
+  - Favoritos, filtros por busca e arquivamento
+
+- **Funcionalidades extras**
+  - Modo escuro
+  - Hashtags com autocompletar e ícones (ex: `#urgente`, `#code_review`)
+  - Exportação/importação em `.json` com todos os dados do mural
+  - Painel de Analytics com gráficos de status e progresso dos lembretes
+  - Interface responsiva com Bootstrap 5
+  - Armazenamento via `localStorage`
 
 ---
 
 ## 🚀 Como usar
 
-1. Acesse:  
-   👉 [https://llima-dev.github.io/notation-pro/notation.html](https://llima-dev.github.io/notation-pro/notation.html)
-
-2. Use os botões no topo de cada coluna para adicionar novos registros:
-   - **Lembrete**
-   - **Anotação livre**
-   - **Snippet de código**
-
-3. Todos os dados são salvos automaticamente no seu navegador.
-
-4. Use `#tags` nas descrições para classificar seus cards.
+1. Acesse: 👉 [https://llima-dev.github.io/notation-pro/notation.html](https://llima-dev.github.io/notation-pro/notation.html)  
+2. Pronto! Todos os dados são salvos automaticamente no seu navegador via `localStorage`.
 
 ---
 
-## 💾 Exportar / Importar
+## 💾 Backup
 
-- Clique no botão de menu (📥 ou 📤) para exportar ou importar seus dados em formato `.json`
-- Útil para fazer backup ou transferir entre navegadores
-
----
-
-## 🛠️ Tecnologias usadas
-
-| Recurso        | Função                              |
-|----------------|-------------------------------------|
-| `Bootstrap 5`  | Layout e componentes visuais        |
-| `Font Awesome` | Ícones                              |
-| `highlight.js` | Realce de código nos snippets       |
-| `QuillJS`      | Editor de texto rico nas anotações  |
-| `SortableJS`   | Arrastar e reorganizar os cards     |
-| `localStorage` | Armazenamento dos dados no navegador|
+- Clique em **Exportar** para salvar seu mural como um arquivo `.json`.
+- Clique em **Importar** para carregar um mural salvo anteriormente.
+- Também é possível limpar todos os dados com um clique (⚠️ ação irreversível).
 
 ---
 
-## 🧠 Requisitos não funcionais
+## 📊 Analytics
 
-- Funciona 100% client-side
-- Sem dependência de servidor ou banco de dados
-- Compatível com navegadores modernos
+Acesse a aba **Analytics** para visualizar:
 
----
-
-## 🖼️ Captura de tela
-
-![alt text](https://github.com/user-attachments/assets/b3693649-6860-4c28-bb6b-e2a665f2d3d9)
+- 📈 Gráfico de **status dos lembretes**: Concluído, Pendente e Atrasado.
+- 📊 Gráfico de **progresso dos checklists**: Faixas de 0%, 1–49%, 50–99% e 100%.
 
 ---
 
-## 📜 Licença
+## 🤝 Contribuindo
 
-Este projeto está licenciado sob a [MIT License](LICENSE).
+Contribuições são super bem-vindas!  
+Se quiser sugerir melhorias, corrigir bugs ou adicionar novas funcionalidades, sinta-se à vontade para abrir um **Pull Request** ou uma **Issue** neste repositório.
 
 ---
 
-## 📄 Documentação
+## 📄 Licença
 
-Acesse a documentação completa do mural no PDF abaixo:
+Distribuído sob a licença **MIT**.  
+Você pode usar, modificar e distribuir à vontade — só não apague os créditos. 😉
 
-👉 [Mural v1.3.0 - Documentação (PDF)](docs/documentação_do_projeto___notation-pro.pdf)
+---
 
-## 🙌 Feito por
-
-**Lsantos-art** — com carinho, código e alguns alarmes esquecidos.  
-Contribuições e melhorias são bem-vindas!
+> Versão: `v1.4.0`  
+> Desenvolvido com 💚 por [Lindomar Lima]
